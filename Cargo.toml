@@ -1,0 +1,12 @@
+[package]
+name = "zebra"
+version = "0.0.0"
+authors = ["Kunihiro Ishiguro <kunihiro@zebra.dev"]
+license = "MIT/Apache-2.0"
+repository = "https://github.com/zebra-rs/zebra"
+description = "Re-implementation of GNU Zebra, Quagga, FRR in Rust programming language."
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
