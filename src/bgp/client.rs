@@ -39,15 +39,23 @@ impl<'a> Client<'a> {
         }
         println!("Read num: {}", n);
 
-        let packet = crate::bgp::packet::bgp::BgpPacket::new(&buf).unwrap();
+        let packet = crate::bgp::packet::BgpPacket::new(&buf).unwrap();
         let typ = packet.get_bgp_type();
         let length = packet.get_length();
 
         use crate::bgp::packet::BgpTypes;
+        use pnet::packet::Packet;
+
         println!("Type {:?}", typ);
         match typ {
             BgpTypes::OPEN => {
                 println!("Open message!");
+                let open = crate::bgp::packet::BgpOpenPacket::new(packet.payload()).unwrap();
+                println!("Version: {:?}", open.get_version());
+                println!("AS: {:?}", open.get_asn());
+                println!("HoldTime: {:?}", open.get_hold_time());
+                println!("OptParamLen: {:?}", open.get_opt_param_len());
+                println!("Payload Len: {:?}", open.payload().len());
             }
             BgpTypes::UPDATE => {
                 println!("Update message!");
@@ -64,8 +72,6 @@ impl<'a> Client<'a> {
         }
 
         println!("Length {:?}", length);
-        //println!("Payload {:?}", payload);
-
-        return Ok(());
+        Ok(())
     }
 }
