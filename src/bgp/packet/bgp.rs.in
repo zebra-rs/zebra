@@ -86,7 +86,7 @@ impl pnet::packet::PrimitiveValues for Marker {
     }
 }
 
-#[derive(Clone, Debug, Copy)]
+#[derive(Clone, Debug, Copy, PartialEq, Eq)]
 pub struct BgpType(pub u8);
 
 impl pnet::packet::PrimitiveValues for BgpType {
@@ -101,6 +101,16 @@ impl BgpType {
     pub fn new(val: u8) -> BgpType {
         BgpType(val)
     }
+}
+
+#[allow(non_snake_case)]
+pub mod BgpTypes {
+    use super::BgpType;
+
+    pub const OPEN: BgpType = BgpType(1);
+    pub const UPDATE: BgpType = BgpType(2);
+    pub const NOTIFICATION: BgpType = BgpType(3);
+    pub const KEEPALIVE: BgpType = BgpType(4);
 }
 
 use pnet_macros_support::types::*;

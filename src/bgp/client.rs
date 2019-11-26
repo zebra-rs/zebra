@@ -42,9 +42,30 @@ impl<'a> Client<'a> {
         let packet = crate::bgp::packet::bgp::BgpPacket::new(&buf).unwrap();
         //packet.decode_marker();
         let typ = packet.get_bgp_type();
+
+        use crate::bgp::packet::bgp::BgpTypes;
+
         let length = packet.get_length();
 
         println!("Type {:?}", typ);
+        match typ {
+            BgpTypes::OPEN => {
+                println!("Open message!");
+            }
+            BgpTypes::UPDATE => {
+                println!("Update message!");
+            }
+            BgpTypes::NOTIFICATION => {
+                println!("Notification message!");
+            }
+            BgpTypes::KEEPALIVE => {
+                println!("Keepalive message!");
+            }
+            unknown => {
+                println!("Unknown message type {:?}", unknown);
+            }
+        }
+
         println!("Length {:?}", length);
         //println!("Payload {:?}", payload);
 
