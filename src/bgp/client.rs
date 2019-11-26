@@ -40,13 +40,10 @@ impl<'a> Client<'a> {
         println!("Read num: {}", n);
 
         let packet = crate::bgp::packet::bgp::BgpPacket::new(&buf).unwrap();
-        //packet.decode_marker();
         let typ = packet.get_bgp_type();
-
-        use crate::bgp::packet::bgp::BgpTypes;
-
         let length = packet.get_length();
 
+        use crate::bgp::packet::BgpTypes;
         println!("Type {:?}", typ);
         match typ {
             BgpTypes::OPEN => {
