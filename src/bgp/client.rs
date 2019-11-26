@@ -30,6 +30,7 @@ impl<'a> Client<'a> {
             println!("BGP socket closed");
             std::process::exit(1);
         }
+        let buf = &buf[0..n];
 
         // Mimimum BGP message len is 19.
         if n < 19 {
