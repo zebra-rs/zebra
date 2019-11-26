@@ -6,9 +6,15 @@ license = "MIT/Apache-2.0"
 repository = "https://github.com/zebra-rs/zebra"
 description = "Re-implementation of GNU Zebra, Quagga, FRR in Rust programming language."
 edition = "2018"
+build = "build.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[build-dependencies]
+glob = "0.2.*"
+syntex = "0.42" # where version is the version of syntex used in pnet_macros/Cargo.toml
+pnet_macros = "*"
 
 [dependencies]
 lazy_static = "1.4.0"
 failure = "0.1.6"
+pnet = "0.23.0"
+pnet_macros_support = "0.23.0"

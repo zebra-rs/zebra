@@ -1,0 +1,117 @@
+#[derive(Clone, Debug, Copy)]
+pub struct Marker {
+    m0: u8,
+    m1: u8,
+    m2: u8,
+    m3: u8,
+    m4: u8,
+    m5: u8,
+    m6: u8,
+    m7: u8,
+    m8: u8,
+    m9: u8,
+    ma: u8,
+    mb: u8,
+    mc: u8,
+    md: u8,
+    me: u8,
+    mf: u8,
+}
+
+impl Marker {
+    /// Construct a new `MacAddr` instance.
+    pub fn new(
+        m0: u8,
+        m1: u8,
+        m2: u8,
+        m3: u8,
+        m4: u8,
+        m5: u8,
+        m6: u8,
+        m7: u8,
+        m8: u8,
+        m9: u8,
+        ma: u8,
+        mb: u8,
+        mc: u8,
+        md: u8,
+        me: u8,
+        mf: u8,
+    ) -> Self {
+        Marker {
+            m0: m0,
+            m1: m1,
+            m2: m2,
+            m3: m3,
+            m4: m4,
+            m5: m5,
+            m6: m6,
+            m7: m7,
+            m8: m8,
+            m9: m9,
+            ma: ma,
+            mb: mb,
+            mc: mc,
+            md: md,
+            me: me,
+            mf: mf,
+        }
+    }
+}
+
+impl pnet::packet::PrimitiveValues for Marker {
+    type T = (
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+        u8,
+    );
+    fn to_primitive_values(&self) -> Self::T {
+        (
+            self.m0, self.m1, self.m2, self.m3, self.m4, self.m5, self.m6, self.m7, self.m8,
+            self.m9, self.ma, self.mb, self.mc, self.md, self.me, self.mf,
+        )
+    }
+}
+
+#[derive(Clone, Debug, Copy)]
+pub struct BgpType(pub u8);
+
+impl pnet::packet::PrimitiveValues for BgpType {
+    type T = (u8,);
+    fn to_primitive_values(&self) -> (u8,) {
+        (self.0,)
+    }
+}
+
+impl BgpType {
+    /// Construct a new `BgpType` instance.
+    pub fn new(val: u8) -> BgpType {
+        BgpType(val)
+    }
+}
+
+use pnet_macros_support::types::*;
+
+#[packet]
+pub struct Bgp {
+    #[construct_with(u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8)]
+    pub marker: Marker,
+    pub length: u16be,
+    #[construct_with(u8)]
+    pub bgp_type: BgpType,
+    #[payload]
+    pub payload: Vec<u8>,
+}
