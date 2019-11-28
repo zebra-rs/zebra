@@ -1,9 +1,10 @@
 const BGP_PORT: u16 = 179;
 
+pub use capability::*;
 pub use client::Client;
 pub use communities::Communities;
-//pub use packet::Packet;
 
+mod capability;
 mod client;
 mod communities;
 mod packet;

@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+use super::*;
 use pnet::packet::Packet;
 use std::io::Read;
 use std::net::SocketAddrV4;
@@ -17,19 +18,8 @@ impl<'a> Client<'a> {
         }
     }
 
-    // fn cap_parse(&self, packet: &'a [u8]) -> (&'a [u8]) {
-    //     println!("cap_parse len: {}", packet.len());
-
-    //     let cap = crate::bgp::packet::BgpOpenOptPacket::new(packet).unwrap();
-    //     println!("cap type {}", cap.get_typ());
-    //     println!("cap length {}", cap.get_length());
-    //     println!("cap payload Len: {:?}", cap.payload().len());
-    //     let ret = cap.payload();
-    //     (&ret)
-    // }
-
     pub fn connect(&self) -> Result<(), failure::Error> {
-        let sock_addr_str = format!("{}:{}", self.addr, super::BGP_PORT);
+        let sock_addr_str = format!("{}:{}", self.addr, BGP_PORT);
         let sock_addr: SocketAddrV4 = sock_addr_str.parse()?;
 
         let mut stream = TcpStream::connect(sock_addr)?;
@@ -78,37 +68,19 @@ impl<'a> Client<'a> {
                     println!("opt length {}", opt.get_length());
                     println!("opt payload len {}", opt.payload().len());
 
-                    // 2 is capability.
+                    // When Open opt message is not capability(2) return here.
                     if opt.get_typ() != 2 {
                         return Ok(());
                     }
 
-                    if opt.get_length() > 0 {
-                        let cap = crate::bgp::packet::BgpOpenOptPacket::new(opt.payload()).unwrap();
-                        println!("cap type {}", cap.get_typ());
-                        println!("cap length {}", cap.get_length());
-                        println!("cap payload Len: {:?}", cap.payload().len());
-
-                        let mut payload = cap.payload();
-                        let offset: usize = cap.get_length() as usize;
-                        payload = &payload[offset..];
-                        println!("cap payload Len(adj): {:?}", payload.len());
-                        //let mut payload_len = payload.len();
-
-                        //self.cap_parse(payload);
-
-                        // while payload_len > 0 {
-                        //     let cap = crate::bgp::packet::BgpOpenOptPacket::new(payload).unwrap();
-                        //     println!("cap type {}", cap.get_typ());
-                        //     println!("cap length {}", cap.get_length());
-                        //     println!("cap payload Len: {:?}", cap.payload().len());
-                        //     payload = cap.payload();
-                        //     let offset: usize = cap.get_length() as usize;
-                        //     payload = &payload[offset..];
-                        //     println!("cap payload Len(adj): {:?}", payload.len());
-                        //     payload_len = payload.len();
-                        // }
+                    // Parse Open capability message.
+                    let mut packet: &[u8] = opt.payload();
+                    let mut caps = crate::bgp::Capabilities::new();
+                    while let Some(payload) = capability_parse(packet, &mut caps) {
+                        packet = payload;
+                        println!("len {}", packet.len());
                     }
+                    caps.dump();
                 }
             }
             BgpTypes::UPDATE => {
