@@ -127,6 +127,13 @@ pub fn capability_parse<'a>(packet: &'a [u8], caps: &mut Capabilities) -> Option
             if (length % 6) != 0 {
                 return None;
             }
+            println!("Capability: Restart");
+        }
+        CAPABILITY_CODE_LLGR => {
+            println!("Capability: LLGR");
+        }
+        CAPABILITY_CODE_ADDPATH => {
+            println!("Capability: AddPath");
         }
         _ => println!("other capability"),
     }
