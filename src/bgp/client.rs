@@ -18,11 +18,34 @@ impl<'a> Client<'a> {
         }
     }
 
+    pub fn send_open(&self) {
+        let mut buf = [0u8; 4096];
+        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf).unwrap();
+
+        use crate::bgp::packet::BgpTypes;
+        let marker: crate::bgp::packet::bgp::Marker = crate::bgp::packet::bgp::Marker::new(
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+            0xff, 0xff,
+        );
+        packet.set_marker(marker);
+        packet.set_bgp_type(BgpTypes::OPEN);
+        packet.set_length(19u16);
+
+        let p = packet.packet();
+        println!("send_open length {}", p.len());
+        for i in 0..19 {
+            println!("{}: {}", i, p[i]);
+        }
+    }
+
     pub fn connect(&self) -> Result<(), failure::Error> {
         let sock_addr_str = format!("{}:{}", self.addr, BGP_PORT);
         let sock_addr: SocketAddrV4 = sock_addr_str.parse()?;
 
         let mut stream = TcpStream::connect(sock_addr)?;
+
+        // Send BGP packet.
+        self.send_open();
 
         // Read BGP message.
         let mut buf = [0u8; 4096];
