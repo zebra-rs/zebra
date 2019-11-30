@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 pub struct Neighbor {
-    ipaddr: std::net::IpAddr,
+    pub ipaddr: std::net::IpAddr,
 }
 
 impl std::cmp::Ord for Neighbor {
