@@ -10,20 +10,17 @@ impl NeighborMap {
     pub fn new() -> Self {
         NeighborMap(BTreeMap::<IpAddr, Neighbor>::new())
     }
-}
 
-use std::ops::{Deref, DerefMut};
-
-impl Deref for NeighborMap {
-    type Target = BTreeMap<IpAddr, Neighbor>;
-    fn deref(&self) -> &BTreeMap<IpAddr, Neighbor> {
-        &self.0
+    pub fn insert(&mut self, key: IpAddr, value: Neighbor) -> Option<Neighbor> {
+        self.0.insert(key, value)
     }
-}
 
-impl DerefMut for NeighborMap {
-    fn deref_mut(&mut self) -> &mut BTreeMap<IpAddr, Neighbor> {
-        &mut self.0
+    pub fn get(&self, key: &std::net::IpAddr) -> Option<&Neighbor> {
+        self.0.get(key)
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
     }
 }
 
