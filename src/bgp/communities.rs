@@ -73,21 +73,6 @@ impl Communities {
     }
 }
 
-use std::ops::{Deref, DerefMut};
-
-impl Deref for Communities {
-    type Target = Vec<u32>;
-    fn deref(&self) -> &Vec<u32> {
-        &self.0
-    }
-}
-
-impl DerefMut for Communities {
-    fn deref_mut(&mut self) -> &mut Vec<u32> {
-        &mut self.0
-    }
-}
-
 use std::fmt;
 impl fmt::Display for Communities {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -123,6 +108,14 @@ impl fmt::Display for Communities {
 }
 
 impl Communities {
+    pub fn push(&mut self, value: u32) {
+        self.0.push(value)
+    }
+
+    pub fn contains(&self, x: &u32) -> bool {
+        self.0.contains(x)
+    }
+
     pub fn parse_community(s: &str) -> Option<u32> {
         let com_strs: Vec<&str> = s.split(':').collect();
         match com_strs.len() {
