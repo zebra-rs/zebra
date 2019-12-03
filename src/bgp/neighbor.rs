@@ -31,22 +31,28 @@ impl NeighborVec {
     }
 }
 
-use std::ops::{Deref, DerefMut};
-
-impl Deref for NeighborVec {
-    type Target = Vec<Neighbor>;
-    fn deref(&self) -> &Vec<Neighbor> {
-        &self.0
-    }
-}
-
-impl DerefMut for NeighborVec {
-    fn deref_mut(&mut self) -> &mut Vec<Neighbor> {
-        &mut self.0
-    }
-}
+use std::slice::SliceIndex;
 
 impl NeighborVec {
+    pub fn binary_search(&self, x: &Neighbor) -> Result<usize, usize> {
+        self.0.binary_search(x)
+    }
+
+    pub fn insert(&mut self, index: usize, element: Neighbor) {
+        self.0.insert(index, element)
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn get<I>(&self, index: I) -> Option<&<I as SliceIndex<[Neighbor]>>::Output>
+    where
+        I: SliceIndex<[Neighbor]>,
+    {
+        self.0.get(index)
+    }
+
     pub fn insert_sort(&mut self, n: Neighbor) -> Option<()> {
         if let Err(pos) = self.binary_search(&n) {
             self.insert(pos, n);
@@ -99,7 +105,8 @@ mod test {
 
         assert_eq!(v.len(), 3);
 
-        let nr1 = &v[0];
+        //let nr1 = &v[0];
+        let nr1 = v.get(0).unwrap();
         let addr1: std::net::IpAddr = "10.0.0.1".parse().unwrap();
         assert_eq!(nr1.ipaddr, addr1);
 
