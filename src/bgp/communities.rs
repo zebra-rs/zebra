@@ -65,15 +65,11 @@ lazy_static! {
     };
 }
 
-pub struct Communities {
-    coms: Vec<u32>,
-}
+pub struct Communities(Vec<u32>);
 
 impl Communities {
     pub fn new() -> Self {
-        Communities {
-            coms: Vec::<u32>::new(),
-        }
+        Communities(Vec::<u32>::new())
     }
 }
 
@@ -82,13 +78,13 @@ use std::ops::{Deref, DerefMut};
 impl Deref for Communities {
     type Target = Vec<u32>;
     fn deref(&self) -> &Vec<u32> {
-        &self.coms
+        &self.0
     }
 }
 
 impl DerefMut for Communities {
     fn deref_mut(&mut self) -> &mut Vec<u32> {
-        &mut self.coms
+        &mut self.0
     }
 }
 
@@ -103,7 +99,7 @@ impl fmt::Display for Communities {
             hval.to_string() + ":" + &lval.to_string()
         };
 
-        let mut iter = self.coms.iter();
+        let mut iter = self.0.iter();
         let val = match iter.next() {
             None => String::new(),
             Some(first_elem) => {
