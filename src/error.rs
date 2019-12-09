@@ -14,11 +14,11 @@ pub fn error_io_test() -> Result<(), failure::Error> {
 }
 
 pub fn error_my_test() -> Result<(), failure::Error> {
-    return Err(MyError {}.into());
+    Err(MyError {}.into())
 }
 
 pub fn error_my_bgp_test() -> Result<(), failure::Error> {
-    return Err(MyBgpError::BgpError.into());
+    Err(MyBgpError::BgpError.into())
 }
 
 #[cfg(test)]
