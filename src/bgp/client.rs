@@ -57,7 +57,7 @@ impl<'a> Client<'a> {
         }
         let buf = &buf[0..n];
 
-        // Mimimum BGP message len is 19.
+        // Minimum BGP message len is 19.
         if n < 19 {
             // Need to read more.
             println!("BGP packet length is smaller than minimum length (19).");
