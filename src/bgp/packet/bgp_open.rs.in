@@ -23,7 +23,7 @@ pub struct BgpOpen {
     pub version: u8,
     pub asn: u16be,
     pub hold_time: u16be,
-    pub id: u32be,
+    pub router_id: u32be,
     pub opt_param_len: u8,
     #[payload]
     pub payload: Vec<u8>,

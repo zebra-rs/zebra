@@ -4,6 +4,7 @@ use pnet::packet::Packet;
 use std::io::Read;
 use std::net::SocketAddrV4;
 use std::net::TcpStream;
+use crate::bgp::packet::BgpTypes;
 
 pub struct Client<'a> {
     addr: &'a str,
@@ -18,23 +19,24 @@ impl<'a> Client<'a> {
         }
     }
 
-    pub fn send_open(&self) {
+    pub fn open_send(&self) {
+        // Prepare BGP buffer with marker.
         let mut buf = [0u8; 4096];
-        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf).unwrap();
-
-        use crate::bgp::packet::BgpTypes;
-        let marker: crate::bgp::packet::bgp::Marker = crate::bgp::packet::bgp::Marker::new(
-            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-            0xff, 0xff,
-        );
-        packet.set_marker(marker);
+        for i in 0..16 {
+            buf[i] = 0xff;
+        }
+        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf[0..19]).unwrap();
         packet.set_bgp_type(BgpTypes::OPEN);
         packet.set_length(19u16);
 
-        let p = packet.packet();
-        println!("send_open length {}", p.len());
-        for i in 0..19 {
-            println!("{}: {}", i, p[i]);
+        let mut open = crate::bgp::packet::MutableBgpOpenPacket::new(&mut buf[19..]).unwrap();
+        open.set_version(4);
+        open.set_asn(10);
+        open.set_hold_time(90);
+        open.set_router_id(1);
+
+        for i in 0..28 {
+            println!("{}: {}", i, buf[i]);
         }
     }
 
@@ -45,7 +47,7 @@ impl<'a> Client<'a> {
         let mut stream = TcpStream::connect(sock_addr)?;
 
         // Send BGP packet.
-        self.send_open();
+        self.open_send();
 
         // Read BGP message.
         let mut buf = [0u8; 4096];
@@ -68,8 +70,6 @@ impl<'a> Client<'a> {
         let packet = crate::bgp::packet::BgpPacket::new(&buf).unwrap();
         let typ = packet.get_bgp_type();
         let length = packet.get_length();
-
-        use crate::bgp::packet::BgpTypes;
 
         println!("Type {:?}", typ);
         match typ {
