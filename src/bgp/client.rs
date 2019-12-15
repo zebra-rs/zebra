@@ -4,6 +4,7 @@ use pnet::packet::Packet;
 use std::io::Read;
 use std::net::SocketAddrV4;
 use std::net::TcpStream;
+use std::io::Write;
 use crate::bgp::packet::BgpTypes;
 
 pub struct Client<'a> {
@@ -19,7 +20,7 @@ impl<'a> Client<'a> {
         }
     }
 
-    pub fn open_send(&self) {
+    pub fn open_send(&self, stream: &mut TcpStream) {
         // Prepare BGP buffer with marker.
         let mut buf = [0u8; 4096];
         for i in 0..16 {
@@ -27,17 +28,22 @@ impl<'a> Client<'a> {
         }
         let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf[0..19]).unwrap();
         packet.set_bgp_type(BgpTypes::OPEN);
-        packet.set_length(19u16);
+        packet.set_length(29u16);
 
         let mut open = crate::bgp::packet::MutableBgpOpenPacket::new(&mut buf[19..]).unwrap();
         open.set_version(4);
-        open.set_asn(10);
-        open.set_hold_time(90);
-        open.set_router_id(1);
+        open.set_asn(1);
+        open.set_hold_time(3);
+        let id: std::net::Ipv4Addr = "10.0.0.1".parse().unwrap();
+        open.set_router_id(id);
 
-        for i in 0..28 {
+        // Open length.
+
+        let buf = &buf[..29];
+        for i in 0..29 {
             println!("{}: {}", i, buf[i]);
         }
+        let _ = stream.write(buf);
     }
 
     pub fn connect(&self) -> Result<(), failure::Error> {
@@ -47,7 +53,7 @@ impl<'a> Client<'a> {
         let mut stream = TcpStream::connect(sock_addr)?;
 
         // Send BGP packet.
-        self.open_send();
+        self.open_send(&mut stream);
 
         // Read BGP message.
         let mut buf = [0u8; 4096];
@@ -121,6 +127,9 @@ impl<'a> Client<'a> {
         }
 
         println!("Length {:?}", length);
-        Ok(())
+
+        loop {}
+
+        //Ok(())
     }
 }

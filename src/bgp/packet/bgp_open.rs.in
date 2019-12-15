@@ -16,6 +16,7 @@
 // |                                                               |
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+use std::net::Ipv4Addr;
 use pnet_macros_support::types::*;
 
 #[packet]
@@ -23,7 +24,8 @@ pub struct BgpOpen {
     pub version: u8,
     pub asn: u16be,
     pub hold_time: u16be,
-    pub router_id: u32be,
+    #[construct_with(u8, u8, u8, u8)]
+    pub router_id: Ipv4Addr,
     pub opt_param_len: u8,
     #[payload]
     pub payload: Vec<u8>,
