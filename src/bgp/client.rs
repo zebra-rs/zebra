@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 use super::*;
+use crate::bgp::packet::BgpTypes;
 use pnet::packet::Packet;
 use std::io::Read;
+use std::io::Write;
 use std::net::SocketAddrV4;
 use std::net::TcpStream;
-use std::io::Write;
-use crate::bgp::packet::BgpTypes;
 
 pub struct Client<'a> {
     addr: &'a str,
