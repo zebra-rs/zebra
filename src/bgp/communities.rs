@@ -166,6 +166,11 @@ impl Communities {
         }
         return Some(coms);
     }
+
+    pub fn to_json(&self) -> String {
+        // format!(r#"community: {}"#, self)
+        format!(r#"{{"community": "{}"}}"#, self)
+    }
 }
 
 #[cfg(test)]
@@ -258,6 +263,15 @@ mod test {
         if !com.contains(&val) {
             panic!("Community must contain 100:10");
         }
+    }
+
+    #[test]
+    fn to_json() {
+        let com = Communities::from_str("no-export 100:10 100").unwrap();
+        assert_eq!(
+            com.to_json(),
+            String::from(r#"{"community": "no-export 100:10 0:100"}"#)
+        );
     }
 
     #[test]
