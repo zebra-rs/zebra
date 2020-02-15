@@ -1,16 +1,8 @@
-use futures::future::join_all;
-use tokio::io::AsyncReadExt;
-use tokio::io::AsyncWriteExt;
+use std::net::{IpAddr, Ipv4Addr};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 use tokio::runtime::Builder;
-//use tokio::time::Duration;
-
-// async fn fff() -> Result<(), Box<dyn std::error::Error>> {
-//     tokio::time::delay_for(Duration::from_secs(3)).await;
-
-//     let mut _listener = TcpListener::bind("127.0.0.1:7878").await?;
-//     Ok(())
-// }
+use tokio::sync::mpsc;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
@@ -19,39 +11,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
 
-    let mut rt = Builder::new()
-        .basic_scheduler()
-        .enable_all()
-        .build()
-        .unwrap();
+    let mut rt = Builder::new().basic_scheduler().enable_all().build()?;
 
-    //let _ = rt.block_on(fff());
+    let (tx, mut rx) = mpsc::unbounded_channel::<IpAddr>();
 
-    rt.block_on(async {
-        let mut handles = Vec::new();
+    // Test send.
+    let neighbor_ipv4: Ipv4Addr = "10.0.0.1".parse()?;
+    let neighbor_addr = IpAddr::V4(neighbor_ipv4);
+    tx.send(neighbor_addr)?;
 
-        handles.push(tokio::spawn(async {
-            // Listener.
-            let mut listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
-            println!("Start listener");
+    rt.block_on(async move {
+        let addr = rx.recv().await;
+        println!("recv {:?}", addr);
 
-            loop {
-                let (mut socket, _) = listener.accept().await.unwrap();
-                println!("Accept");
-
-                tokio::spawn(async move {
-                    let mut buf = [0; 4096];
-
-                    let n = socket.read(&mut buf).await.unwrap();
-                    if n == 0 {
-                        return;
-                    }
-                    socket.write_all(&buf[0..n]).await.unwrap();
-                });
-            }
-        }));
-
-        handles.push(tokio::spawn(async move {
+        tokio::spawn(async move {
             let client = zebra::bgp::Client::new(&args[1]);
             if let Err(err) = client.connect() {
                 println!("{}", err);
@@ -60,9 +33,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else {
                 println!("client connect success");
             }
-        }));
+        });
 
-        join_all(handles).await;
+        loop {
+            let mut listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
+            let (mut socket, _) = listener.accept().await.unwrap();
+            println!("Accept");
+
+            tokio::spawn(async move {
+                let mut buf = [0; 4096];
+
+                let n = socket.read(&mut buf).await.unwrap();
+                if n == 0 {
+                    return;
+                }
+                socket.write_all(&buf[0..n]).await.unwrap();
+            });
+        }
     });
 
     Ok(())
