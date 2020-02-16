@@ -60,7 +60,6 @@ impl MessageOpen {
                 buf = payload;
                 println!("len {}", buf.len());
             }
-            caps.dump();
         }
 
         Ok(MessageOpen {

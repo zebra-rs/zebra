@@ -35,36 +35,15 @@ const CAPABILITY_CODE_LLGR: u8 = 129; /* Long Lived Graceful Restart */
 const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
 
 #[derive(Debug)]
-pub struct Capabilities {
-    caps: Vec<Capability>,
-}
+pub struct Capabilities(Vec<Capability>);
 
 impl Capabilities {
     pub fn new() -> Self {
-        Capabilities {
-            caps: Vec::<Capability>::new(),
-        }
+        Capabilities(Vec::<Capability>::new())
     }
 
-    pub fn dump(&self) {
-        for cap in self.caps.iter() {
-            println!("{:?}", cap);
-        }
-    }
-}
-
-use std::ops::{Deref, DerefMut};
-
-impl Deref for Capabilities {
-    type Target = Vec<Capability>;
-    fn deref(&self) -> &Vec<Capability> {
-        &self.caps
-    }
-}
-
-impl DerefMut for Capabilities {
-    fn deref_mut(&mut self) -> &mut Vec<Capability> {
-        &mut self.caps
+    pub fn push(&mut self, value: Capability) {
+        self.0.push(value)
     }
 }
 
