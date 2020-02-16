@@ -1,5 +1,8 @@
 #![allow(dead_code)]
 
+use byteorder::{NetworkEndian, ReadBytesExt};
+use std::io::Cursor;
+
 const AFI_IP: u16 = 1;
 const AFI_IP6: u16 = 2;
 const AFI_L2VPN: u16 = 25;
@@ -18,20 +21,20 @@ const SAFI_FLOW_SPEC_UNICAST: u8 = 133;
 const SAFI_FLOW_SPEC_VPN: u8 = 134;
 const SAFI_KEY_VALUE: u8 = 241;
 
-const CAPABILITY_CODE_MP: u8 = 1; /* Multiprotocol Extensions */
-const CAPABILITY_CODE_REFRESH: u8 = 2; /* Route Refresh Capability */
+//const CAPABILITY_CODE_MP: u8 = 1; /* Multiprotocol Extensions */
+//const CAPABILITY_CODE_REFRESH: u8 = 2; /* Route Refresh Capability */
 const CAPABILITY_CODE_ORF: u8 = 3; /* Cooperative Route Filtering Capability */
 const CAPABILITY_CODE_LABEL_INFO: u8 = 4; /* Carrying Label Information */
 const CAPABILITY_CODE_ENHE: u8 = 5; /* Extended Next Hop Encoding */
-const CAPABILITY_CODE_RESTART: u8 = 64; /* Graceful Restart Capability */
-const CAPABILITY_CODE_AS4: u8 = 65; /* 4-octet AS number Capability */
+//const CAPABILITY_CODE_RESTART: u8 = 64; /* Graceful Restart Capability */
+//const CAPABILITY_CODE_AS4: u8 = 65; /* 4-octet AS number Capability */
 const CAPABILITY_CODE_DYNAMIC_OLD: u8 = 66; /* Dynamic Capability, deprecated since 2003 */
 const CAPABILITY_CODE_DYNAMIC: u8 = 67; /* Dynamic Capability */
-const CAPABILITY_CODE_ADDPATH: u8 = 69; /* Addpath Capability */
+//const CAPABILITY_CODE_ADDPATH: u8 = 69; /* Addpath Capability */
 const CAPABILITY_CODE_ENH_REFRESH: u8 = 70; /* Enhanced Route Refresh */
 const CAPABILITY_CODE_FQDN: u8 = 73; /* Advertise hostname capability */
 const CAPABILITY_CODE_REFRESH_CISCO: u8 = 128; /* Route Refresh Capability(Cisco) */
-const CAPABILITY_CODE_LLGR: u8 = 129; /* Long Lived Graceful Restart */
+// const CAPABILITY_CODE_LLGR: u8 = 129; /* Long Lived Graceful Restart */
 const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
 
 #[derive(Debug)]
@@ -47,43 +50,166 @@ impl Capabilities {
     }
 }
 
+#[derive(failure::Fail, Debug)]
+pub enum Error {
+    #[fail(display = "malformed packet")]
+    Malformed,
+}
+
+#[derive(Debug)]
+pub struct Family {
+    afi: u16,
+    safi: u8,
+}
+
 #[derive(Debug)]
 pub struct RestartFlags {
     restart_state: u8,
     restart_time: u16,
-    afi: u16,
-    safi: u8,
+    family: Family,
     forwarding_state: u8,
 }
 
 #[derive(Debug)]
 pub enum Capability {
-    Refresh,
-    Mp(u16, u8),
-    As4(u32),
-    Restart(Vec<RestartFlags>),
+    RouteRefresh,
+    MultiProtocol(Family),
+    FourOctetAs(u32),
+    GracefulRestart {
+        flags: u8,
+        time: u16,
+        families: Vec<(Family, u8)>,
+    },
+    LongLived(Vec<(Family, u8, u32)>),
+    AddPath(Vec<(Family, u8)>),
 }
 
-pub fn capability_parse<'a>(packet: &'a [u8], caps: &mut Capabilities) -> Option<&'a [u8]> {
-    if packet.len() == 0 {
-        return None;
+impl Capability {
+    const MULTI_PROTOCOL: u8 = 1; /* Multiprotocol Extensions */
+    const ROUTE_REFRESH: u8 = 2; /* Route Refresh Capability */
+    const GRACEFUL_RESTART: u8 = 64; /* Graceful Restart Capability */
+    const FOUR_OCTET_AS: u8 = 65; /* 4-octet AS number Capability */
+    const ADD_PATH: u8 = 69; /* Addpath Capability */
+    const LONG_LIVED_GRACEFUL_RESTART: u8 = 129; /* Long Lived Graceful Restart */
+
+    pub fn from_bytes(c: &mut Cursor<&[u8]>) -> Result<Capability, failure::Error> {
+        let code = c.read_u8()?;
+        let len = c.read_u8()?;
+        println!("code {} len {}", code, len);
+
+        match code {
+            Capability::MULTI_PROTOCOL => {
+                if len != 4 {
+                    return Err(Error::Malformed.into());
+                }
+                let afi: u16 = c.read_u16::<NetworkEndian>()?;
+                let _res: u8 = c.read_u8()?;
+                let safi: u8 = c.read_u8()?;
+                return Ok(Capability::MultiProtocol(Family { afi, safi }));
+            }
+            Capability::ROUTE_REFRESH => {
+                if len != 0 {
+                    return Err(Error::Malformed.into());
+                }
+                return Ok(Capability::RouteRefresh);
+            }
+            Capability::GRACEFUL_RESTART => {
+                if len < 6 || (len - 2) % 4 != 0 {
+                    return Err(Error::Malformed.into());
+                }
+                let restart = c.read_u16::<NetworkEndian>()?;
+                let flags = (restart >> 12) as u8;
+                let time = restart & 0xfff;
+
+                let mut families = Vec::new();
+                let mut num_families = (len - 2) / 4;
+                while num_families > 0 {
+                    let afi: u16 = c.read_u16::<NetworkEndian>()?;
+                    let safi: u8 = c.read_u8()?;
+                    let flags: u8 = c.read_u8()?;
+                    families.push((Family { afi, safi }, flags));
+                    num_families -= 1;
+                }
+                return Ok(Capability::GracefulRestart {
+                    flags,
+                    time,
+                    families,
+                });
+            }
+            Capability::FOUR_OCTET_AS => {
+                if len != 4 {
+                    return Err(Error::Malformed.into());
+                }
+                let asn: u32 = c.read_u32::<NetworkEndian>()?;
+                return Ok(Capability::FourOctetAs(asn));
+            }
+            Capability::ADD_PATH => {
+                if len < 4 || len % 4 != 0 {
+                    return Err(Error::Malformed.into());
+                }
+                let mut v = Vec::new();
+                let mut num = len / 4;
+                while num > 0 {
+                    let afi = c.read_u16::<NetworkEndian>()?;
+                    let safi = c.read_u8()?;
+                    let flags = c.read_u8()?;
+                    v.push((Family { afi, safi }, flags));
+                    num -= 1;
+                }
+                return Ok(Capability::AddPath(v));
+            }
+            Capability::LONG_LIVED_GRACEFUL_RESTART => {
+                if len < 7 || len % 7 != 0 {
+                    return Err(Error::Malformed.into());
+                }
+                let mut v = Vec::new();
+                let mut num = len / 7;
+                while num > 0 {
+                    let afi = c.read_u16::<NetworkEndian>()?;
+                    let safi = c.read_u8()?;
+                    let flags = c.read_u8()?;
+                    let time = (c.read_u8()? as u32) << 16
+                        | (c.read_u8()? as u32) << 8
+                        | c.read_u8()? as u32;
+                    v.push((Family { afi, safi }, flags, time));
+                    num -= 1;
+                }
+                return Ok(Capability::LongLived(v));
+            }
+            _ => {}
+        }
+        Ok(Capability::RouteRefresh)
     }
+}
+
+// This is left for sample of other methods.
+// capability_parse() caller side:
+//
+// while let Some(payload) = capability_parse(buf, &mut caps) {
+//     buf = payload;
+//     println!("len {}", buf.len());
+// }
+pub fn capability_parse<'a>(packet: &'a [u8], caps: &mut Capabilities) -> Option<&'a [u8]> {
     if packet.len() < 2 {
         return None;
     }
-    let typ = packet[0];
-    let length = packet[1];
-    println!("type: {} length: {}", typ, length);
 
-    match typ {
-        CAPABILITY_CODE_REFRESH => {
+    let code = packet[0];
+    let length = packet[1];
+    let offset: usize = 2 + (length as usize);
+
+    if packet.len() < offset {
+        return None;
+    }
+
+    match code {
+        Capability::ROUTE_REFRESH => {
             if length != 0 {
                 return None;
             }
-            // println!("Capability: Refresh");
-            caps.push(Capability::Refresh);
+            caps.push(Capability::RouteRefresh);
         }
-        CAPABILITY_CODE_MP => {
+        Capability::MULTI_PROTOCOL => {
             if length != 4 {
                 return None;
             }
@@ -92,32 +218,29 @@ pub fn capability_parse<'a>(packet: &'a [u8], caps: &mut Capabilities) -> Option
             let _res: u8 = packet[4];
             let safi: u8 = packet[5];
 
-            // println!("Capability: MP AFI={} SAFI={}", afi, safi,);
-            caps.push(Capability::Mp(afi, safi));
+            caps.push(Capability::MultiProtocol(Family { afi, safi }));
         }
-        CAPABILITY_CODE_AS4 => {
+        Capability::FOUR_OCTET_AS => {
             if length != 4 {
                 return None;
             }
             let asn: u32 = u32::from_be_bytes([packet[2], packet[3], packet[4], packet[5]]);
-            // println!("Capability: AS4 {}", asn);
-            caps.push(Capability::As4(asn));
+            caps.push(Capability::FourOctetAs(asn));
         }
-        CAPABILITY_CODE_RESTART => {
+        Capability::GRACEFUL_RESTART => {
             if (length % 6) != 0 {
                 return None;
             }
             println!("Capability: Restart");
         }
-        CAPABILITY_CODE_LLGR => {
+        Capability::LONG_LIVED_GRACEFUL_RESTART => {
             println!("Capability: LLGR");
         }
-        CAPABILITY_CODE_ADDPATH => {
+        Capability::ADD_PATH => {
             println!("Capability: AddPath");
         }
-        _ => println!("other capability"),
+        _ => println!("Capability: Other values"),
     }
 
-    let offset: usize = 2 + (length as usize);
     Some(&packet[offset..])
 }

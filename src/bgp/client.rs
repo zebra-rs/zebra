@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 //use super::*;
 use crate::bgp::packet::{BgpOpenOptPacket, BgpOpenPacket, BgpPacket, BgpTypes};
-use crate::bgp::{capability_parse, Capabilities};
+use crate::bgp::{Capabilities, Capability};
 use pnet::packet::Packet;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
@@ -31,11 +31,11 @@ struct MessageOpen {
 }
 
 impl MessageOpen {
-    pub fn from_bytes(buf: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn from_bytes(buf: &[u8]) -> Result<Self, failure::Error> {
         let open = BgpOpenPacket::new(buf).ok_or(Error::from(ErrorKind::UnexpectedEof))?;
         let opt_param_len = open.get_opt_param_len() as usize;
         if opt_param_len < open.payload().len() {
-            return Err(Error::from(ErrorKind::UnexpectedEof));
+            return Err(Error::from(ErrorKind::UnexpectedEof).into());
         }
 
         let mut caps = Capabilities::new();
@@ -47,19 +47,32 @@ impl MessageOpen {
 
             // When Open opt message is not capability(2) return here.
             if opt.get_typ() != 2 {
-                return Err(Error::from(ErrorKind::UnexpectedEof));
+                return Err(Error::from(ErrorKind::UnexpectedEof).into());
             }
-            let opt_len = opt.get_length() as usize;
-            if opt_len < opt.payload().len() {
-                return Err(Error::from(ErrorKind::UnexpectedEof));
+            let mut len = opt.get_length() as usize;
+            if len < opt.payload().len() {
+                return Err(Error::from(ErrorKind::UnexpectedEof).into());
             }
 
             // Parse Open capability message.
-            let mut buf: &[u8] = opt.payload();
-            while let Some(payload) = capability_parse(buf, &mut caps) {
-                buf = payload;
-                println!("len {}", buf.len());
+            let mut c = std::io::Cursor::new(opt.payload());
+
+            while len > 0 {
+                let pos = c.position();
+                match Capability::from_bytes(&mut c) {
+                    Ok(cap) => caps.push(cap),
+                    Err(e) => {
+                        println!("XXX error {}", e);
+                        return Err(e);
+                    }
+                }
+                let diff = (c.position() - pos) as usize;
+                if diff > len {
+                    return Err(Error::from(ErrorKind::UnexpectedEof).into());
+                }
+                len -= diff;
             }
+            println!("XXX caps {:?}", caps)
         }
 
         Ok(MessageOpen {
