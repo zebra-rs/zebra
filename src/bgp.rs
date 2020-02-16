@@ -1,4 +1,4 @@
-const BGP_PORT: u16 = 179;
+pub const BGP_PORT: u16 = 179;
 
 pub use capability::*;
 pub use client::Client;

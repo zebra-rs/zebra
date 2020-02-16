@@ -1,13 +1,11 @@
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::{IpAddr, SocketAddr};
 use std::pin::Pin;
 use std::task::{Context, Poll};
-//use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::stream::{Stream, StreamExt};
 use tokio::sync::mpsc;
 use tokio::time::{DelayQueue, Duration};
-
-static BGP_PORT: u16 = 179;
+use zebra::bgp;
 
 struct Streams {
     listener: TcpListener,
@@ -25,7 +23,7 @@ impl Stream for Streams {
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         if let Poll::Ready(Some(v)) = Pin::new(&mut self.rx).poll_next(cx) {
-            let sock = std::net::SocketAddr::new(v, BGP_PORT);
+            let sock = std::net::SocketAddr::new(v, bgp::BGP_PORT);
             self.timer.insert(sock, Duration::from_secs(5));
         }
 
@@ -43,27 +41,9 @@ impl Stream for Streams {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() != 2 {
-        println!("Please specify BGP neighbor IP address");
-        std::process::exit(1);
-    }
-
-    // Test client.
-    // tokio::spawn(async move {
-    //     let client = zebra::bgp::Client::new(&args[1]);
-    //     if let Err(err) = client.connect() {
-    //         println!("{}", err);
-    //         //std::process::exit(1);
-    //         println!("client connect failed");
-    //     } else {
-    //         println!("client connect success");
-    //     }
-    // });
-
     // Event channel.
     let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
-    let listener = TcpListener::bind(("0.0.0.0", BGP_PORT)).await.unwrap();
+    let listener = TcpListener::bind(("::", bgp::BGP_PORT)).await.unwrap();
 
     // Streams.
     let mut streams = Streams {
@@ -72,35 +52,44 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         timer: DelayQueue::new(),
     };
 
-    // Test send.
-    let neighbor_ipv4: Ipv4Addr = "10.0.0.1".parse()?;
-    let neighbor_addr = IpAddr::V4(neighbor_ipv4);
+    // Test neighbor create.
+    let neighbor_addr = IpAddr::V4("192.168.55.2".parse()?);
     tx.send(neighbor_addr)?;
 
     loop {
-        match streams.next().await {
+        let (stream, saddr) = match streams.next().await {
             Some(v) => match v {
-                Ok(Event::Accept((_, _))) => {
+                Ok(Event::Accept((stream, saddr))) => {
                     println!("Accept");
+                    (stream, saddr)
                 }
-                Ok(Event::Connect(_)) => {
-                    println!("Connect");
+                Ok(Event::Connect(saddr)) => {
+                    println!("Trying to Connect {}", saddr);
+                    match TcpStream::connect(saddr).await {
+                        Ok(stream) => {
+                            println!("Connect success");
+                            (stream, saddr)
+                        }
+                        Err(_) => {
+                            println!("connect error");
+                            streams.timer.insert(saddr, Duration::from_secs(15));
+                            continue;
+                        }
+                    }
                 }
-                Err(e) => println!("Error: {}", e),
+                Err(e) => {
+                    println!("Error: {}", e);
+                    continue;
+                }
             },
-            None => {}
+            None => {
+                continue;
+            }
         };
-        // let (mut socket, _) = stream.listener.accept().await.unwrap();
-        // println!("Accept");
-
-        // tokio::spawn(async move {
-        //     let mut buf = [0; 4096];
-
-        //     let n = socket.read(&mut buf).await.unwrap();
-        //     if n == 0 {
-        //         return;
-        //     }
-        //     socket.write_all(&buf[0..n]).await.unwrap();
-        // });
+        println!("Here we are {:?} {}", stream, saddr);
+        tokio::spawn(async move {
+            let mut client = bgp::Client::new(stream, saddr);
+            client.connect().unwrap();
+        });
     }
 }
