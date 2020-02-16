@@ -21,22 +21,6 @@ const SAFI_FLOW_SPEC_UNICAST: u8 = 133;
 const SAFI_FLOW_SPEC_VPN: u8 = 134;
 const SAFI_KEY_VALUE: u8 = 241;
 
-//const CAPABILITY_CODE_MP: u8 = 1; /* Multiprotocol Extensions */
-//const CAPABILITY_CODE_REFRESH: u8 = 2; /* Route Refresh Capability */
-const CAPABILITY_CODE_ORF: u8 = 3; /* Cooperative Route Filtering Capability */
-const CAPABILITY_CODE_LABEL_INFO: u8 = 4; /* Carrying Label Information */
-const CAPABILITY_CODE_ENHE: u8 = 5; /* Extended Next Hop Encoding */
-//const CAPABILITY_CODE_RESTART: u8 = 64; /* Graceful Restart Capability */
-//const CAPABILITY_CODE_AS4: u8 = 65; /* 4-octet AS number Capability */
-const CAPABILITY_CODE_DYNAMIC_OLD: u8 = 66; /* Dynamic Capability, deprecated since 2003 */
-const CAPABILITY_CODE_DYNAMIC: u8 = 67; /* Dynamic Capability */
-//const CAPABILITY_CODE_ADDPATH: u8 = 69; /* Addpath Capability */
-const CAPABILITY_CODE_ENH_REFRESH: u8 = 70; /* Enhanced Route Refresh */
-const CAPABILITY_CODE_FQDN: u8 = 73; /* Advertise hostname capability */
-const CAPABILITY_CODE_REFRESH_CISCO: u8 = 128; /* Route Refresh Capability(Cisco) */
-// const CAPABILITY_CODE_LLGR: u8 = 129; /* Long Lived Graceful Restart */
-const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
-
 #[derive(Debug)]
 pub struct Capabilities(Vec<Capability>);
 
@@ -80,6 +64,7 @@ pub enum Capability {
         time: u16,
         families: Vec<(Family, u8)>,
     },
+    DynamicCapability,
     LongLived(Vec<(Family, u8, u32)>),
     AddPath(Vec<(Family, u8)>),
 }
@@ -89,8 +74,18 @@ impl Capability {
     const ROUTE_REFRESH: u8 = 2; /* Route Refresh Capability */
     const GRACEFUL_RESTART: u8 = 64; /* Graceful Restart Capability */
     const FOUR_OCTET_AS: u8 = 65; /* 4-octet AS number Capability */
+    const DYNAMIC_CAPABILITY_OLD: u8 = 66; /* Dynamic Capability, deprecated since 2003 */
+    const DYNAMIC_CAPABILITY: u8 = 67; /* Dynamic Capability */
     const ADD_PATH: u8 = 69; /* Addpath Capability */
     const LONG_LIVED_GRACEFUL_RESTART: u8 = 129; /* Long Lived Graceful Restart */
+    const ROUTE_REFRESH_CISCO: u8 = 128; /* Route Refresh Capability(Cisco) */
+
+    const CAPABILITY_CODE_ORF: u8 = 3; /* Cooperative Route Filtering Capability */
+    const CAPABILITY_CODE_LABEL_INFO: u8 = 4; /* Carrying Label Information */
+    const CAPABILITY_CODE_ENHE: u8 = 5; /* Extended Next Hop Encoding */
+    const CAPABILITY_CODE_ENH_REFRESH: u8 = 70; /* Enhanced Route Refresh */
+    const CAPABILITY_CODE_FQDN: u8 = 73; /* Advertise hostname capability */
+    const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
 
     pub fn from_bytes(c: &mut Cursor<&[u8]>) -> Result<Capability, failure::Error> {
         let code = c.read_u8()?;
@@ -107,7 +102,7 @@ impl Capability {
                 let safi: u8 = c.read_u8()?;
                 return Ok(Capability::MultiProtocol(Family { afi, safi }));
             }
-            Capability::ROUTE_REFRESH => {
+            Capability::ROUTE_REFRESH | Capability::ROUTE_REFRESH_CISCO => {
                 if len != 0 {
                     return Err(Error::Malformed.into());
                 }
@@ -142,6 +137,12 @@ impl Capability {
                 }
                 let asn: u32 = c.read_u32::<NetworkEndian>()?;
                 return Ok(Capability::FourOctetAs(asn));
+            }
+            Capability::DYNAMIC_CAPABILITY | Capability::DYNAMIC_CAPABILITY_OLD => {
+                if len != 0 {
+                    return Err(Error::Malformed.into());
+                }
+                return Ok(Capability::DynamicCapability);
             }
             Capability::ADD_PATH => {
                 if len < 4 || len % 4 != 0 {
