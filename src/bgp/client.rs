@@ -1,8 +1,10 @@
 #![allow(dead_code)]
-use super::*;
-use crate::bgp::packet::BgpTypes;
+//use super::*;
+use crate::bgp::packet::{BgpOpenOptPacket, BgpOpenPacket, BgpPacket, BgpTypes};
+use crate::bgp::{capability_parse, Capabilities};
 use pnet::packet::Packet;
-use std::net::SocketAddr;
+use std::io::{Error, ErrorKind};
+use std::net::{Ipv4Addr, SocketAddr};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
@@ -10,6 +12,74 @@ pub struct Client {
     stream: TcpStream,
     saddr: SocketAddr,
 }
+
+enum Message {
+    MessageOpen,
+    MessageUpdate,
+    MessageKeepAlive,
+    MessageNotification,
+    MessageRouteRefresh,
+}
+
+#[derive(Debug)]
+struct MessageOpen {
+    version: u8,
+    asn: u16,
+    hold_time: u16,
+    router_id: Ipv4Addr,
+    caps: Capabilities,
+}
+
+impl MessageOpen {
+    pub fn from_bytes(buf: &[u8]) -> Result<Self, std::io::Error> {
+        let open = BgpOpenPacket::new(buf).ok_or(Error::from(ErrorKind::UnexpectedEof))?;
+        let opt_param_len = open.get_opt_param_len() as usize;
+        if opt_param_len < open.payload().len() {
+            return Err(Error::from(ErrorKind::UnexpectedEof));
+        }
+
+        let mut caps = Capabilities::new();
+
+        // Open message.
+        if opt_param_len > 0 {
+            let opt = BgpOpenOptPacket::new(open.payload())
+                .ok_or(Error::from(ErrorKind::UnexpectedEof))?;
+
+            // When Open opt message is not capability(2) return here.
+            if opt.get_typ() != 2 {
+                return Err(Error::from(ErrorKind::UnexpectedEof));
+            }
+            let opt_len = opt.get_length() as usize;
+            if opt_len < opt.payload().len() {
+                return Err(Error::from(ErrorKind::UnexpectedEof));
+            }
+
+            // Parse Open capability message.
+            let mut buf: &[u8] = opt.payload();
+            while let Some(payload) = capability_parse(buf, &mut caps) {
+                buf = payload;
+                println!("len {}", buf.len());
+            }
+            caps.dump();
+        }
+
+        Ok(MessageOpen {
+            version: open.get_version(),
+            asn: open.get_asn(),
+            hold_time: open.get_hold_time(),
+            router_id: open.get_router_id(),
+            caps: caps,
+        })
+    }
+}
+
+struct MessageUpdate {}
+
+struct MessageKeepAlive {}
+
+struct MessageRouteRefresh {}
+
+struct MessageNotification {}
 
 impl Client {
     pub fn new(stream: TcpStream, saddr: SocketAddr) -> Self {
@@ -64,44 +134,15 @@ impl Client {
         }
         println!("Read num: {}", n);
 
-        let packet = crate::bgp::packet::BgpPacket::new(&buf).unwrap();
+        let packet = BgpPacket::new(&buf).unwrap();
         let typ = packet.get_bgp_type();
         let length = packet.get_length();
 
         println!("Type {:?}", typ);
         match typ {
             BgpTypes::OPEN => {
-                println!("Open message!");
-                let open = crate::bgp::packet::BgpOpenPacket::new(packet.payload()).unwrap();
-                println!("Version: {:?}", open.get_version());
-                println!("AS: {:?}", open.get_asn());
-                println!("HoldTime: {:?}", open.get_hold_time());
-                let opt_param_len = open.get_opt_param_len();
-                println!("OptParamLen: {:?}", opt_param_len);
-                println!("Payload Len: {:?}", open.payload().len());
-
-                // Open message.
-                if opt_param_len > 0 {
-                    println!("parse opt param");
-                    let opt = crate::bgp::packet::BgpOpenOptPacket::new(open.payload()).unwrap();
-                    println!("opt type {}", opt.get_typ());
-                    println!("opt length {}", opt.get_length());
-                    println!("opt payload len {}", opt.payload().len());
-
-                    // When Open opt message is not capability(2) return here.
-                    if opt.get_typ() != 2 {
-                        return Ok(());
-                    }
-
-                    // Parse Open capability message.
-                    let mut packet: &[u8] = opt.payload();
-                    let mut caps = crate::bgp::Capabilities::new();
-                    while let Some(payload) = capability_parse(packet, &mut caps) {
-                        packet = payload;
-                        println!("len {}", packet.len());
-                    }
-                    caps.dump();
-                }
+                let msg = MessageOpen::from_bytes(packet.payload())?;
+                println!("MessageOpen {:?}", msg);
             }
             BgpTypes::UPDATE => {
                 println!("Update message!");

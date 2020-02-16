@@ -34,6 +34,7 @@ const CAPABILITY_CODE_REFRESH_CISCO: u8 = 128; /* Route Refresh Capability(Cisco
 const CAPABILITY_CODE_LLGR: u8 = 129; /* Long Lived Graceful Restart */
 const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
 
+#[derive(Debug)]
 pub struct Capabilities {
     caps: Vec<Capability>,
 }

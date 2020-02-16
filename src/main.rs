@@ -88,8 +88,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
         println!("{:?} {}", stream, saddr);
         tokio::spawn(async move {
-            let mut client = bgp::Client::new(stream, saddr);
-            let _result = futures::join!(client.connect());
+            let _ = bgp::Client::new(stream, saddr).connect().await;
         });
     }
 }
