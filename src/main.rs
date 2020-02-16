@@ -60,18 +60,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let (stream, saddr) = match streams.next().await {
             Some(v) => match v {
                 Ok(Event::Accept((stream, saddr))) => {
-                    println!("Accept");
+                    println!("Accept!");
                     (stream, saddr)
                 }
                 Ok(Event::Connect(saddr)) => {
                     println!("Trying to Connect {}", saddr);
                     match TcpStream::connect(saddr).await {
                         Ok(stream) => {
-                            println!("Connect success");
+                            println!("Connect!");
                             (stream, saddr)
                         }
-                        Err(_) => {
-                            println!("connect error");
+                        Err(e) => {
+                            println!("Connect error: {}", e);
                             streams.timer.insert(saddr, Duration::from_secs(15));
                             continue;
                         }
@@ -86,10 +86,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 continue;
             }
         };
-        println!("Here we are {:?} {}", stream, saddr);
+        println!("{:?} {}", stream, saddr);
         tokio::spawn(async move {
             let mut client = bgp::Client::new(stream, saddr);
-            client.connect().unwrap();
+            let _result = futures::join!(client.connect());
         });
     }
 }
