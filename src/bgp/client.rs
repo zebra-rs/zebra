@@ -101,7 +101,7 @@ impl Client {
         }
     }
 
-    pub fn open_send(&mut self) {
+    pub async fn open_send(&mut self) {
         // Prepare BGP buffer with marker.
         let mut buf = [0u8; 4096];
         for i in 0..16 {
@@ -121,59 +121,74 @@ impl Client {
         // Open length.
         let buf = &buf[..29];
         println!("Write {:?}", buf);
-        let _ = self.stream.write(buf);
+        let _ = self.stream.write(buf).await;
+    }
+
+    pub async fn keepalive_send(&mut self) {
+        // Prepare BGP buffer with marker.
+        let mut buf = [0u8; 4096];
+        for i in 0..16 {
+            buf[i] = 0xff;
+        }
+        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf[0..19]).unwrap();
+        packet.set_bgp_type(BgpTypes::KEEPALIVE);
+        packet.set_length(19u16);
+
+        // Open length.
+        let buf = &buf[..19];
+        println!("Write {:?}", buf);
+        let _ = self.stream.write(buf).await;
     }
 
     pub async fn connect(&mut self) -> Result<(), failure::Error> {
         // Send BGP packet.
-        self.open_send();
+        self.open_send().await;
 
         // Read BGP message.
-        let mut buf = [0u8; 4096];
-        let n = self.stream.read(&mut buf).await?;
-        if n == 0 {
-            println!("BGP socket closed");
-            std::process::exit(1);
+        loop {
+            let mut buf = [0u8; 4096];
+            let n = self.stream.read(&mut buf).await?;
+            if n == 0 {
+                println!("BGP socket closed");
+                std::process::exit(1);
+            }
+            let buf = &buf[0..n];
+            println!("Read {:?}", buf);
+
+            // Minimum BGP message len is 19.
+            if n < 19 {
+                // Need to read more.
+                println!("BGP packet length is smaller than minimum length (19).");
+                std::process::exit(1);
+            }
+            println!("Read num: {}", n);
+
+            let packet = BgpPacket::new(&buf).unwrap();
+            let typ = packet.get_bgp_type();
+            let length = packet.get_length();
+
+            println!("Type {:?}", typ);
+            match typ {
+                BgpTypes::OPEN => {
+                    let msg = MessageOpen::from_bytes(packet.payload())?;
+                    println!("MessageOpen {:?}", msg);
+                }
+                BgpTypes::UPDATE => {
+                    println!("Update message!");
+                }
+                BgpTypes::NOTIFICATION => {
+                    println!("Notification message!");
+                }
+                BgpTypes::KEEPALIVE => {
+                    println!("Keepalive message!");
+                }
+                unknown => {
+                    println!("Unknown message type {:?}", unknown);
+                }
+            }
+            println!("Length {:?}", length);
+
+            self.keepalive_send().await;
         }
-        let buf = &buf[0..n];
-        println!("Read {:?}", buf);
-
-        // Minimum BGP message len is 19.
-        if n < 19 {
-            // Need to read more.
-            println!("BGP packet length is smaller than minimum length (19).");
-            std::process::exit(1);
-        }
-        println!("Read num: {}", n);
-
-        let packet = BgpPacket::new(&buf).unwrap();
-        let typ = packet.get_bgp_type();
-        let length = packet.get_length();
-
-        println!("Type {:?}", typ);
-        match typ {
-            BgpTypes::OPEN => {
-                let msg = MessageOpen::from_bytes(packet.payload())?;
-                println!("MessageOpen {:?}", msg);
-            }
-            BgpTypes::UPDATE => {
-                println!("Update message!");
-            }
-            BgpTypes::NOTIFICATION => {
-                println!("Notification message!");
-            }
-            BgpTypes::KEEPALIVE => {
-                println!("Keepalive message!");
-            }
-            unknown => {
-                println!("Unknown message type {:?}", unknown);
-            }
-        }
-
-        println!("Length {:?}", length);
-
-        // loop {}
-
-        Ok(())
     }
 }
