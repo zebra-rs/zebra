@@ -7,15 +7,15 @@ use tokio::sync::mpsc;
 use tokio::time::{DelayQueue, Duration};
 use zebra::bgp;
 
+enum Event {
+    Accept((TcpStream, SocketAddr)),
+    Connect(SocketAddr),
+}
+
 struct Streams {
     listener: TcpListener,
     rx: mpsc::UnboundedReceiver<IpAddr>,
     timer: DelayQueue<SocketAddr>,
-}
-
-enum Event {
-    Accept((TcpStream, SocketAddr)),
-    Connect(SocketAddr),
 }
 
 impl Stream for Streams {
