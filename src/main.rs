@@ -9,6 +9,7 @@ use tokio::sync::mpsc;
 use tokio::time::{DelayQueue, Duration};
 //use tokio_util::codec::Framed;
 use zebra::bgp;
+use Event::*;
 
 struct Peer {
     tx: mpsc::UnboundedSender<Event>,
@@ -49,8 +50,6 @@ impl Stream for Listener {
         }
     }
 }
-
-use Event::*;
 
 async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let stream = loop {
@@ -95,27 +94,7 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let _ = bgp::Client::new(stream, saddr).connect().await;
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Event channel.
-    let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
-    let listener = TcpListener::bind(("::", bgp::BGP_PORT)).await.unwrap();
-
-    // Listener.
-    let mut streams = Listener {
-        listener: listener,
-        rx: rx,
-        timer: DelayQueue::new(),
-    };
-
-    // Test neighbor create.
-    let neighbor_addr = IpAddr::V4("192.168.55.2".parse()?);
-    tx.send(neighbor_addr)?;
-
-    // Shared status.
-    let s = Shared::new();
-    let shared: Arc<Mutex<Shared>> = Arc::new(Mutex::new(s));
-
+async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
     loop {
         let (_stream, _saddr) = match streams.next().await {
             Some(v) => match v {
@@ -166,4 +145,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         //     let _ = bgp::Client::new(stream, saddr).connect().await;
         // });
     }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Event channel.
+    let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
+    let listener = TcpListener::bind(("::", bgp::BGP_PORT)).await.unwrap();
+
+    // Listener.
+    let streams = Listener {
+        listener: listener,
+        rx: rx,
+        timer: DelayQueue::new(),
+    };
+
+    // Test neighbor create.
+    let neighbor_addr = IpAddr::V4("192.168.55.2".parse().unwrap());
+    tx.send(neighbor_addr).unwrap();
+
+    // Shared status.
+    let s = Shared::new();
+    let shared: Arc<Mutex<Shared>> = Arc::new(Mutex::new(s));
+
+    futures::join!(accept(streams, shared));
+
+    Ok(())
 }
