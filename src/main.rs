@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
 use std::pin::Pin;
@@ -12,17 +10,40 @@ use tokio::time::{DelayQueue, Duration};
 //use tokio_util::codec::Framed;
 use zebra::bgp;
 
-struct PreSession {}
-
 struct Peer {
-    tx: mpsc::UnboundedSender<IpAddr>,
+    tx: mpsc::UnboundedSender<Event>,
 }
 
 type Shared = HashMap<IpAddr, Peer>;
 
+#[derive(Debug)]
 enum Event {
     Accept((TcpStream, SocketAddr)),
     Connect(SocketAddr),
+    TimerExpired,
+}
+
+#[derive(Debug)]
+struct TimerStream(DelayQueue<Event>);
+
+impl TimerStream {
+    pub fn new() -> Self {
+        TimerStream(DelayQueue::new())
+    }
+    pub fn insert(&mut self, value: Event, timeout: Duration) -> tokio::time::delay_queue::Key {
+        self.0.insert(value, timeout)
+    }
+}
+
+impl Stream for TimerStream {
+    type Item = Result<Event, std::io::Error>;
+
+    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        if let Poll::Ready(Some(Ok(v))) = Pin::new(&mut self.0).poll_expired(cx) {
+            return Poll::Ready(Some(Ok(v.into_inner())));
+        }
+        Poll::Pending
+    }
 }
 
 struct Listener {
@@ -52,44 +73,46 @@ impl Stream for Listener {
     }
 }
 
-struct Connector {
-    rx: mpsc::UnboundedReceiver<IpAddr>,
-    timer: DelayQueue<i32>,
-}
+use Event::*;
 
-impl Stream for Connector {
-    type Item = Result<Event, std::io::Error>;
+async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
+    let sock = loop {
+        let mut timer = TimerStream::new();
+        timer.insert(TimerExpired, Duration::from_secs(3));
 
-    fn poll_next(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        // if let Some(_) = Pin::new(&mut self.conn) {
-        //     println!("XXX Pin conn stream");
-        // }
-        Poll::Pending
-    }
-}
-
-// struct Session {
-//     frames: Framed<TcpStream, Bgp>,
-// }
-
-async fn connect(saddr: SocketAddr, mut _sess: Connector) {
-    loop {
-        println!("XXX Trying to connect");
-        let stream = match TcpStream::connect(saddr).await {
-            Ok(stream) => stream,
-            Err(e) => {
-                println!("Error: {}", e);
-                continue;
-            }
+        tokio::select! {
+            Some(Ok(TimerExpired)) = timer.next() => {
+                println!("Start timer expired");
+            },
+            Some(_) = rx.next() => {
+                println!("RX");
+            },
         };
-        println!("XXX connected {:?}", stream);
 
-        // Need to check we already have established session or not.
-
-        // When session is already established, close stream then fell in sleep.
-
-        break;
-    }
+        tokio::select! {
+            _ = timer.next() => {
+                println!("XXX timer should not happen");
+                continue;
+            },
+            v = tokio::net::TcpStream::connect(saddr) => {
+                match v {
+                    Ok(v) => {
+                        break v;
+                    }
+                    Err(e) => {
+                        println!("Connect Error {:?}", e);
+                        continue;
+                    }
+                }
+            }
+            _ = rx.next() => {
+                println!("RX");
+                continue;
+            },
+        }
+    };
+    // SockStream.
+    println!("sock {:?}", sock);
 }
 
 #[tokio::main]
@@ -106,8 +129,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // Test neighbor create.
-    //let neighbor_addr = IpAddr::V4("192.168.55.2".parse()?);
-    let neighbor_addr = IpAddr::V4("10.0.0.3".parse()?);
+    let neighbor_addr = IpAddr::V4("192.168.55.2".parse()?);
     tx.send(neighbor_addr)?;
 
     // Shared status.
@@ -115,7 +137,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let shared: Arc<Mutex<Shared>> = Arc::new(Mutex::new(s));
 
     loop {
-        let (stream, saddr) = match streams.next().await {
+        let (_stream, _saddr) = match streams.next().await {
             Some(v) => match v {
                 Ok(Event::Accept((stream, saddr))) => {
                     println!("Accept!");
@@ -124,7 +146,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Ok(Event::Connect(saddr)) => {
                     println!("New peer event {}", saddr);
 
-                    let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
+                    let (tx, rx) = mpsc::unbounded_channel::<Event>();
 
                     // Main task.
                     {
@@ -133,29 +155,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let mut peers = shared.lock().unwrap();
                         peers.insert(a, p);
                     }
-
                     let _shared = Arc::clone(&shared);
-                    let sess = Connector {
-                        rx,
-                        timer: DelayQueue::new(),
-                    };
 
-                    // We've got connect event.
-                    tokio::spawn(connect(saddr, sess));
-
+                    tokio::spawn(connect(saddr, rx));
                     continue;
-
-                    // match TcpStream::connect(saddr).await {
-                    //     Ok(stream) => {
-                    //         println!("Connect!");
-                    //         (stream, saddr)
-                    //     }
-                    //     Err(e) => {
-                    //         println!("Connect error: {}", e);
-                    //         streams.timer.insert(saddr, Duration::from_secs(15));
-                    //         continue;
-                    //     }
-                    // }
+                }
+                Ok(_) => {
+                    continue;
                 }
                 Err(e) => {
                     println!("Error: {}", e);
@@ -166,18 +172,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 continue;
             }
         };
-        println!("{:?} {}", stream, saddr);
-        {
-            let peers = shared.lock().unwrap();
-            println!("----");
-            for (k, _) in peers.iter() {
-                println!("{:?}", k);
-            }
-            println!("----");
-        }
+        // println!("{:?} {}", stream, saddr);
+        // {
+        //     let peers = shared.lock().unwrap();
+        //     println!("----");
+        //     for (k, _) in peers.iter() {
+        //         println!("{:?}", k);
+        //     }
+        //     println!("----");
+        // }
 
-        tokio::spawn(async move {
-            let _ = bgp::Client::new(stream, saddr).connect().await;
-        });
+        // tokio::spawn(async move {
+        //     let _ = bgp::Client::new(stream, saddr).connect().await;
+        // });
     }
 }
