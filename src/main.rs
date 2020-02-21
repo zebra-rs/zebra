@@ -53,23 +53,29 @@ impl Stream for Listener {
 use Event::*;
 
 async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
-    let sock = loop {
+    let stream = loop {
         let mut timer = DelayQueue::new();
         timer.insert(TimerExpired, Duration::from_secs(3));
 
         tokio::select! {
-            Some(_) = timer.next() => {
+            _ = timer.next() => {
                 println!("Start timer expired");
             },
-            Some(_) = rx.next() => {
-                println!("RX");
+            _ = rx.next() => {
+                println!("Stop");
+                return;
             },
         };
 
+        timer.insert(TimerExpired, Duration::from_secs(60));
         tokio::select! {
-            _ = timer.next() => {
-                println!("XXX timer should not happen");
+            v = timer.next() => {
+                println!("Connect timer expired {:?}", v);
                 continue;
+            },
+            _ = rx.next() => {
+                println!("Stop");
+                return;
             },
             v = tokio::net::TcpStream::connect(saddr) => {
                 match v {
@@ -82,14 +88,11 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
                     }
                 }
             }
-            _ = rx.next() => {
-                println!("RX");
-                continue;
-            },
         }
     };
     // SockStream.
-    println!("sock {:?}", sock);
+    println!("stream {:?}", stream);
+    let _ = bgp::Client::new(stream, saddr).connect().await;
 }
 
 #[tokio::main]
