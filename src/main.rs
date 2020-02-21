@@ -23,29 +23,6 @@ enum Event {
     TimerExpired,
 }
 
-#[derive(Debug)]
-struct TimerStream(DelayQueue<Event>);
-
-impl TimerStream {
-    pub fn new() -> Self {
-        TimerStream(DelayQueue::new())
-    }
-    pub fn insert(&mut self, value: Event, timeout: Duration) -> tokio::time::delay_queue::Key {
-        self.0.insert(value, timeout)
-    }
-}
-
-impl Stream for TimerStream {
-    type Item = Result<Event, std::io::Error>;
-
-    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        if let Poll::Ready(Some(Ok(v))) = Pin::new(&mut self.0).poll_expired(cx) {
-            return Poll::Ready(Some(Ok(v.into_inner())));
-        }
-        Poll::Pending
-    }
-}
-
 struct Listener {
     listener: TcpListener,
     rx: mpsc::UnboundedReceiver<IpAddr>,
@@ -77,11 +54,11 @@ use Event::*;
 
 async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let sock = loop {
-        let mut timer = TimerStream::new();
+        let mut timer = DelayQueue::new();
         timer.insert(TimerExpired, Duration::from_secs(3));
 
         tokio::select! {
-            Some(Ok(TimerExpired)) = timer.next() => {
+            Some(_) = timer.next() => {
                 println!("Start timer expired");
             },
             Some(_) = rx.next() => {
