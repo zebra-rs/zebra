@@ -1,25 +1,33 @@
-#![allow(dead_code)]
-//use super::*;
-use crate::bgp::packet::{BgpOpenOptPacket, BgpOpenPacket, BgpPacket, BgpTypes};
+use crate::bgp::packet::{BgpHeaderPacket, BgpOpenOptPacket, BgpOpenPacket, BgpTypes};
 use crate::bgp::{Capabilities, Capability};
+use bytes::BytesMut;
 use pnet::packet::Packet;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
+use tokio_util::codec::{Decoder, Encoder};
 
 pub struct Client {
     stream: TcpStream,
-    saddr: SocketAddr,
+    //saddr: SocketAddr,
 }
 
-enum Message {
-    MessageOpen,
-    MessageUpdate,
-    MessageKeepAlive,
-    MessageNotification,
-    MessageRouteRefresh,
+#[derive(Debug)]
+pub enum Event {
+    Accept((TcpStream, SocketAddr)),
+    Connect(SocketAddr),
+    TimerExpired,
+    Message(usize),
 }
+
+// enum Message {
+//     MessageOpen,
+//     MessageUpdate,
+//     MessageKeepAlive,
+//     MessageNotification,
+//     MessageRouteRefresh,
+// }
 
 #[derive(Debug)]
 struct MessageOpen {
@@ -85,19 +93,19 @@ impl MessageOpen {
     }
 }
 
-struct MessageUpdate {}
+// struct MessageUpdate {}
 
-struct MessageKeepAlive {}
+// struct MessageKeepAlive {}
 
-struct MessageRouteRefresh {}
+// struct MessageRouteRefresh {}
 
-struct MessageNotification {}
+// struct MessageNotification {}
 
 impl Client {
-    pub fn new(stream: TcpStream, saddr: SocketAddr) -> Self {
+    pub fn new(stream: TcpStream, _saddr: SocketAddr) -> Self {
         Client {
             stream: stream,
-            saddr: saddr,
+            //saddr: saddr,
         }
     }
 
@@ -107,7 +115,7 @@ impl Client {
         for i in 0..16 {
             buf[i] = 0xff;
         }
-        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf[0..19]).unwrap();
+        let mut packet = crate::bgp::packet::MutableBgpHeaderPacket::new(&mut buf[0..19]).unwrap();
         packet.set_bgp_type(BgpTypes::OPEN);
         packet.set_length(29u16);
 
@@ -130,7 +138,7 @@ impl Client {
         for i in 0..16 {
             buf[i] = 0xff;
         }
-        let mut packet = crate::bgp::packet::MutableBgpPacket::new(&mut buf[0..19]).unwrap();
+        let mut packet = crate::bgp::packet::MutableBgpHeaderPacket::new(&mut buf[0..19]).unwrap();
         packet.set_bgp_type(BgpTypes::KEEPALIVE);
         packet.set_length(19u16);
 
@@ -163,7 +171,7 @@ impl Client {
             }
             println!("Read num: {}", n);
 
-            let packet = BgpPacket::new(&buf).unwrap();
+            let packet = BgpHeaderPacket::new(&buf).unwrap();
             let typ = packet.get_bgp_type();
             let length = packet.get_length();
 
@@ -190,5 +198,62 @@ impl Client {
 
             self.keepalive_send().await;
         }
+    }
+}
+
+pub struct Bgp {}
+
+pub fn from_bytes(buf: &[u8]) -> Result<Event, std::io::Error> {
+    // let _buflen = buf.len();
+    // let mut _c = Cursor::new(_buf);
+    println!("XXX from_bytes len {}", buf.len());
+    let n = buf.len();
+
+    // if n == 0 {
+    //     return Ok(Event::Message(0));
+    // }
+
+    if n < 19 {
+        // Need to read more.
+        println!("BGP packet length is smaller than minimum length (19).");
+        return Err(std::io::Error::from(std::io::ErrorKind::BrokenPipe));
+    }
+    println!("Read num: {}", n);
+
+    let packet = BgpHeaderPacket::new(&buf).unwrap();
+    let typ = packet.get_bgp_type();
+    let length = packet.get_length();
+
+    println!("Type {:?}", typ);
+    println!("Length {:?}", length);
+
+    return Ok(Event::Message(length as usize));
+}
+
+impl Decoder for Bgp {
+    type Item = Event;
+    type Error = std::io::Error;
+
+    fn decode(&mut self, src: &mut BytesMut) -> std::io::Result<Option<Event>> {
+        match from_bytes(src) {
+            Ok(Event::Message(n)) => {
+                let _ = src.split_to(n);
+                Ok(Some(Event::Message(n)))
+            }
+            Ok(_) => {
+                println!("unexpected Ok");
+                Ok(None)
+            }
+            Err(_) => Ok(None),
+        }
+    }
+}
+
+impl Encoder for Bgp {
+    type Item = Event;
+    type Error = std::io::Error;
+
+    fn encode(&mut self, _item: Event, _dst: &mut BytesMut) -> Result<(), std::io::Error> {
+        Ok(())
     }
 }

@@ -130,7 +130,7 @@ use pnet_macros_support::types::*;
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 #[packet]
-pub struct Bgp {
+pub struct BgpHeader {
     #[construct_with(u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8)]
     pub marker: Marker,
     pub length: u16be,

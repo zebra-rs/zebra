@@ -3,26 +3,18 @@ use std::net::{IpAddr, SocketAddr};
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
-use tokio::net::{TcpListener, TcpStream};
+use tokio::net::TcpListener;
 use tokio::stream::{Stream, StreamExt};
 use tokio::sync::mpsc;
 use tokio::time::{DelayQueue, Duration};
-//use tokio_util::codec::Framed;
-use zebra::bgp;
-use Event::*;
+use tokio_util::codec::Framed;
+use zebra::bgp::*;
 
 struct Peer {
     tx: mpsc::UnboundedSender<Event>,
 }
 
 type Shared = HashMap<IpAddr, Peer>;
-
-#[derive(Debug)]
-enum Event {
-    Accept((TcpStream, SocketAddr)),
-    Connect(SocketAddr),
-    TimerExpired,
-}
 
 struct Listener {
     listener: TcpListener,
@@ -35,7 +27,7 @@ impl Stream for Listener {
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         if let Poll::Ready(Some(v)) = Pin::new(&mut self.rx).poll_next(cx) {
-            let sock = SocketAddr::new(v, bgp::BGP_PORT);
+            let sock = SocketAddr::new(v, BGP_PORT);
             self.timer.insert(sock, Duration::from_secs(0));
         }
 
@@ -54,7 +46,7 @@ impl Stream for Listener {
 async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let stream = loop {
         let mut timer = DelayQueue::new();
-        timer.insert(TimerExpired, Duration::from_secs(3));
+        timer.insert(Event::TimerExpired, Duration::from_secs(3));
 
         tokio::select! {
             _ = timer.next() => {
@@ -66,7 +58,7 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
             },
         };
 
-        timer.insert(TimerExpired, Duration::from_secs(60));
+        timer.insert(Event::TimerExpired, Duration::from_secs(60));
         tokio::select! {
             v = timer.next() => {
                 println!("Connect timer expired {:?}", v);
@@ -89,9 +81,12 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
             }
         }
     };
-    // SockStream.
-    println!("stream {:?}", stream);
-    let _ = bgp::Client::new(stream, saddr).connect().await;
+
+    // Framed.
+    let mut stream = Framed::new(stream, Bgp {});
+    while let Some(x) = stream.next().await {
+        println!("{:?}", x);
+    }
 }
 
 async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
@@ -151,7 +146,7 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Event channel.
     let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
-    let listener = TcpListener::bind(("::", bgp::BGP_PORT)).await.unwrap();
+    let listener = TcpListener::bind(("::", BGP_PORT)).await.unwrap();
 
     // Listener.
     let streams = Listener {
