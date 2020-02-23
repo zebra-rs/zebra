@@ -1,5 +1,9 @@
 #![allow(dead_code)]
 
+use lazy_static::lazy_static;
+use std::collections::HashMap;
+use std::sync::Mutex;
+
 const COMMUNITY_INTERNET: u32 = 0x0;
 const COMMUNITY_GSHUT: u32 = 0xFFFF0000;
 const COMMUNITY_ACCEPT_OWN: u32 = 0xFFFF0001;
@@ -16,10 +20,6 @@ const COMMUNITY_NO_ADVERTISE: u32 = 0xFFFFFF02;
 const COMMUNITY_NO_EXPORT_SUBCONFED: u32 = 0xFFFFFF03;
 const COMMUNITY_LOCAL_AS: u32 = 0xFFFFFF03;
 const COMMUNITY_NO_PEER: u32 = 0xFFFFFF04;
-
-use lazy_static::lazy_static;
-use std::collections::HashMap;
-use std::sync::Mutex;
 
 lazy_static! {
     static ref COMMUNITY_STR_MAP: Mutex<HashMap<&'static str, u32>> = {
