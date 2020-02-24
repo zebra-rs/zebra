@@ -18,19 +18,27 @@ pub enum Event {
     Accept((TcpStream, SocketAddr)),
     Connect(SocketAddr),
     TimerExpired,
-    Message(usize),
+    Packet(Message),
 }
 
-// enum Message {
-//     MessageOpen,
-//     MessageUpdate,
-//     MessageKeepAlive,
-//     MessageNotification,
-//     MessageRouteRefresh,
-// }
+#[derive(Debug)]
+pub enum Message {
+    Open(MessageOpen),
+    RouteRefresh,
+}
+
+impl Message {
+    fn len(&self) -> usize {
+        match self {
+            Message::Open(m) => m.len(),
+            Message::RouteRefresh => 0,
+        }
+    }
+}
 
 #[derive(Debug)]
-struct MessageOpen {
+pub struct MessageOpen {
+    len: u16,
     version: u8,
     asn: u16,
     hold_time: u16,
@@ -39,7 +47,11 @@ struct MessageOpen {
 }
 
 impl MessageOpen {
-    pub fn from_bytes(buf: &[u8]) -> Result<Self, failure::Error> {
+    pub fn len(&self) -> usize {
+        self.len as usize
+    }
+
+    pub fn from_bytes(buf: &[u8], len: u16) -> Result<Self, failure::Error> {
         let open = BgpOpenPacket::new(buf).ok_or(Error::from(ErrorKind::UnexpectedEof))?;
         let opt_param_len = open.get_opt_param_len() as usize;
         if opt_param_len < open.payload().len() {
@@ -84,6 +96,7 @@ impl MessageOpen {
         }
 
         Ok(MessageOpen {
+            len: len,
             version: open.get_version(),
             asn: open.get_asn(),
             hold_time: open.get_hold_time(),
@@ -178,7 +191,7 @@ impl Client {
             println!("Type {:?}", typ);
             match typ {
                 BgpTypes::OPEN => {
-                    let msg = MessageOpen::from_bytes(packet.payload())?;
+                    let msg = MessageOpen::from_bytes(packet.payload(), length)?;
                     println!("MessageOpen {:?}", msg);
                 }
                 BgpTypes::UPDATE => {
@@ -203,31 +216,46 @@ impl Client {
 
 pub struct Bgp {}
 
-pub fn from_bytes(buf: &[u8]) -> Result<Event, std::io::Error> {
-    // let _buflen = buf.len();
-    // let mut _c = Cursor::new(_buf);
+pub fn from_bytes(buf: &[u8]) -> Result<Event, failure::Error> {
     println!("XXX from_bytes len {}", buf.len());
     let n = buf.len();
-
-    // if n == 0 {
-    //     return Ok(Event::Message(0));
-    // }
 
     if n < 19 {
         // Need to read more.
         println!("BGP packet length is smaller than minimum length (19).");
-        return Err(std::io::Error::from(std::io::ErrorKind::BrokenPipe));
+        return Err(std::io::Error::from(std::io::ErrorKind::BrokenPipe).into());
     }
     println!("Read num: {}", n);
 
     let packet = BgpHeaderPacket::new(&buf).unwrap();
     let typ = packet.get_bgp_type();
-    let length = packet.get_length();
+    let len = packet.get_length();
 
     println!("Type {:?}", typ);
-    println!("Length {:?}", length);
+    println!("Length {:?}", len);
 
-    return Ok(Event::Message(length as usize));
+    match typ {
+        BgpTypes::OPEN => {
+            let msg = MessageOpen::from_bytes(packet.payload(), len)?;
+            println!("MessageOpen {:?}", msg);
+            return Ok(Event::Packet(Message::Open(msg)));
+        }
+        BgpTypes::UPDATE => {
+            println!("Update message!");
+        }
+        BgpTypes::NOTIFICATION => {
+            println!("Notification message!");
+        }
+        BgpTypes::KEEPALIVE => {
+            println!("Keepalive message!");
+        }
+        unknown => {
+            println!("Unknown message type {:?}", unknown);
+        }
+    }
+    println!("Length {:?}", len);
+
+    return Ok(Event::TimerExpired);
 }
 
 impl Decoder for Bgp {
@@ -236,9 +264,9 @@ impl Decoder for Bgp {
 
     fn decode(&mut self, src: &mut BytesMut) -> std::io::Result<Option<Event>> {
         match from_bytes(src) {
-            Ok(Event::Message(n)) => {
-                let _ = src.split_to(n);
-                Ok(Some(Event::Message(n)))
+            Ok(Event::Packet(m)) => {
+                let _ = src.split_to(m.len());
+                Ok(Some(Event::Packet(m)))
             }
             Ok(_) => {
                 println!("unexpected Ok");
