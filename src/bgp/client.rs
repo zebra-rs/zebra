@@ -4,6 +4,7 @@ use bytes::BytesMut;
 use pnet::packet::Packet;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
+//use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_util::codec::{Decoder, Encoder};
@@ -28,11 +29,32 @@ pub enum Message {
 }
 
 impl Message {
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         match self {
             Message::Open(m) => m.len(),
             Message::RouteRefresh => 0,
         }
+    }
+
+    pub fn to_bytes(self) -> Result<Vec<u8>, failure::Error> {
+        println!("XXX to_bytes");
+        let buf: Vec<u8> = Vec::new();
+        let mut c = std::io::Cursor::new(buf);
+        std::io::Write::write(&mut c, &vec![0xff; 16])?;
+        //c.write_u8(10u8)?;
+        let vec = c.into_inner();
+        println!("XXX to_bytes vec.len {}", vec.len());
+
+        match self {
+            Message::RouteRefresh => {
+                println!("RouteRefresh");
+            }
+            _ => {
+                println!("Other");
+            }
+        }
+
+        Ok(vec)
     }
 }
 
@@ -278,10 +300,20 @@ impl Decoder for Bgp {
 }
 
 impl Encoder for Bgp {
-    type Item = Event;
+    type Item = Message;
     type Error = std::io::Error;
 
-    fn encode(&mut self, _item: Event, _dst: &mut BytesMut) -> Result<(), std::io::Error> {
+    fn encode(&mut self, msg: Message, _dst: &mut BytesMut) -> Result<(), std::io::Error> {
+        match msg {
+            Message::RouteRefresh => {
+                let buf = msg.to_bytes().unwrap();
+                println!("XXX RouteRefresh {:?}", buf);
+            }
+            Message::Open(_) => {
+                println!("XXX Open Message encode");
+            }
+        }
+        println!("XXX encode");
         Ok(())
     }
 }

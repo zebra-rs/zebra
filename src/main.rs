@@ -1,3 +1,4 @@
+use futures::sink::SinkExt;
 use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
 use std::pin::Pin;
@@ -84,6 +85,13 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
 
     // Framed.
     let mut stream = Framed::new(stream, Bgp {});
+
+    // Send open.
+    let msg = Message::RouteRefresh;
+    if stream.send(msg).await.is_err() {
+        println!("XXX send error");
+    }
+
     while let Some(x) = stream.next().await {
         println!("{:?}", x);
     }
