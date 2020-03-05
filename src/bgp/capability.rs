@@ -3,7 +3,7 @@
 use byteorder::{NetworkEndian, ReadBytesExt};
 use std::io::Cursor;
 
-const AFI_IP: u16 = 1;
+pub const AFI_IP: u16 = 1;
 const AFI_IP6: u16 = 2;
 const AFI_L2VPN: u16 = 25;
 const AFI_OPAQUE: u16 = 16397;
@@ -14,7 +14,7 @@ const SAFI_MPLS_LABEL: u8 = 4;
 const SAFI_ENCAPSULATION: u8 = 7;
 const SAFI_VPLS: u8 = 65;
 const SAFI_EVPN: u8 = 70;
-const SAFI_MPLS_VPN: u8 = 128;
+pub const SAFI_MPLS_VPN: u8 = 128;
 const SAFI_MPLS_VPN_MULTICAST: u8 = 129;
 const SAFI_ROUTE_TARGET_CONSTRAINTS: u8 = 132;
 const SAFI_FLOW_SPEC_UNICAST: u8 = 133;
@@ -42,8 +42,8 @@ pub enum Error {
 
 #[derive(Debug)]
 pub struct Family {
-    afi: u16,
-    safi: u8,
+    pub afi: u16,
+    pub safi: u8,
 }
 
 #[derive(Debug)]

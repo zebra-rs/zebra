@@ -1,17 +1,15 @@
 use crate::bgp::packet::{BgpHeaderPacket, BgpOpenOptPacket, BgpOpenPacket, BgpTypes};
-use crate::bgp::{Capabilities, Capability};
+use crate::bgp::{Capabilities, Capability, Family, AFI_IP, BGP_HEADER_LEN, SAFI_MPLS_VPN};
 use bytes::BytesMut;
 use pnet::packet::Packet;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
-//use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
 use tokio_util::codec::{Decoder, Encoder};
 
 pub struct Client {
     stream: TcpStream,
-    //saddr: SocketAddr,
 }
 
 #[derive(Debug)]
@@ -164,7 +162,7 @@ impl Client {
         // Open length.
         let buf = &buf[..29];
         println!("Write {:?}", buf);
-        let _ = self.stream.write(buf).await;
+        //let _ = self.stream.write(buf).await;
     }
 
     pub async fn keepalive_send(&mut self) {
@@ -180,7 +178,7 @@ impl Client {
         // Open length.
         let buf = &buf[..19];
         println!("Write {:?}", buf);
-        let _ = self.stream.write(buf).await;
+        //let _ = self.stream.write(buf).await;
     }
 
     pub async fn connect(&mut self) -> Result<(), failure::Error> {
@@ -316,4 +314,88 @@ impl Encoder for Bgp {
         println!("XXX encode");
         Ok(())
     }
+}
+
+use crate::bgp::packet::MutableBgpHeaderPacket;
+use crate::bgp::packet::MutableBgpOpenPacket;
+use byteorder::WriteBytesExt;
+
+pub fn w(buf: &mut [u8]) -> usize {
+    let mut c = std::io::Cursor::new(buf);
+    let sp = c.position();
+    println!("c position {}", sp);
+    let tmp = vec![0xff, 0xff];
+    std::io::Write::write(&mut c, &tmp).unwrap();
+    println!("c position {}", c.position());
+    c.write_u8(10u8).unwrap();
+    let cp = c.position();
+    let len = cp - sp;
+    println!("XXX len {}", len);
+    len as usize
+}
+
+pub struct PeerConfig {
+    asn: u32,
+    hold_time: u16,
+}
+
+pub fn open_option_packet(_caps: &Capabilities, buf: &mut [u8]) -> usize {
+    let mut c = std::io::Cursor::new(buf);
+
+    c.write_u8();
+
+    c.position() as usize
+}
+
+pub fn open_packet(config: &PeerConfig, caps: &Capabilities, buf: &mut [u8]) -> usize {
+    // Open.
+    let mut len = MutableBgpOpenPacket::minimum_packet_size();
+    let mut open = MutableBgpOpenPacket::new(buf).unwrap();
+    open.set_version(4);
+    open.set_asn(config.asn as u16);
+    open.set_hold_time(config.hold_time);
+    let router_id: std::net::Ipv4Addr = "10.0.0.1".parse().unwrap();
+    open.set_router_id(router_id);
+
+    // Open option.
+    len += open_option_packet(caps, &mut buf[len..]);
+
+    len
+}
+
+pub fn packet() {
+    let mut buf = [0u8; 4096];
+    let mut len: usize = BGP_HEADER_LEN;
+
+    // Open Option - capability.
+    let mut caps = Capabilities::new();
+    let cap_afi = Capability::MultiProtocol(Family {
+        afi: AFI_IP,
+        safi: SAFI_MPLS_VPN,
+    });
+    caps.push(cap_afi);
+
+    // Open.
+    let config = PeerConfig {
+        asn: 1,
+        hold_time: 90,
+    };
+    len += open_packet(&config, &caps, &mut buf[len..]);
+    println!("len {}", len);
+
+    // Cursor.
+    len += w(&mut buf[len..]);
+    println!("len {}", len);
+
+    // Slice.
+    let slice = &buf[0..len];
+    println!("slice {:?}", slice);
+
+    // Header.
+    for i in 0..16 {
+        buf[i] = 0xff;
+    }
+    let mut header = MutableBgpHeaderPacket::new(&mut buf[..len]).unwrap();
+    header.set_bgp_type(BgpTypes::OPEN);
+    header.set_length(len as u16);
 }

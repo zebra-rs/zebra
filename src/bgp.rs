@@ -1,4 +1,5 @@
 pub const BGP_PORT: u16 = 179;
+pub const BGP_HEADER_LEN: usize = 19;
 
 pub use capability::*;
 pub use client::Bgp;
@@ -13,7 +14,7 @@ pub use neighbor_map::NeighborMap;
 pub use packet::*;
 
 mod capability;
-mod client;
+pub mod client;
 mod communities;
 mod message;
 mod neighbor;

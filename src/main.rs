@@ -12,7 +12,7 @@ use tokio_util::codec::Framed;
 use zebra::bgp::*;
 
 struct Peer {
-    tx: mpsc::UnboundedSender<Event>,
+    _tx: mpsc::UnboundedSender<Event>,
 }
 
 type Shared = HashMap<IpAddr, Peer>;
@@ -113,7 +113,7 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
                     // Main task.
                     {
                         let a = IpAddr::V4("192.168.55.2".parse().unwrap());
-                        let p = Peer { tx };
+                        let p = Peer { _tx: tx };
                         let mut peers = shared.lock().unwrap();
                         peers.insert(a, p);
                     }
@@ -152,6 +152,8 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    zebra::bgp::client::packet();
+
     // Event channel.
     let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
     let listener = TcpListener::bind(("::", BGP_PORT)).await.unwrap();
