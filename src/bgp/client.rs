@@ -340,9 +340,7 @@ pub struct PeerConfig {
 }
 
 pub fn open_option_packet(_caps: &Capabilities, buf: &mut [u8]) -> usize {
-    let mut c = std::io::Cursor::new(buf);
-
-    c.write_u8();
+    let c = std::io::Cursor::new(buf);
 
     c.position() as usize
 }
