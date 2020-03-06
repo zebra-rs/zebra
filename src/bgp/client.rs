@@ -3,7 +3,6 @@ use crate::bgp::{Capabilities, Capability, Family, AFI_IP, BGP_HEADER_LEN, SAFI_
 use bytes::BufMut;
 use bytes::BytesMut;
 use pnet::packet::Packet;
-use std::io::Cursor;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
 use tokio::io::AsyncReadExt;
@@ -278,34 +277,10 @@ impl Decoder for Bgp {
 
 use crate::bgp::packet::MutableBgpHeaderPacket;
 use crate::bgp::packet::MutableBgpOpenPacket;
-use byteorder::WriteBytesExt;
 
 pub struct PeerConfig {
     asn: u32,
     hold_time: u16,
-}
-
-const CAPABILITIES_OPT_PARAM: u8 = 2;
-
-pub fn open_option_packet(caps: &Capabilities, buf: &mut [u8]) -> Result<usize, failure::Error> {
-    if caps.len() == 0 {
-        return Ok(0);
-    }
-
-    let mut c = Cursor::new(buf);
-    let offset: usize = 2;
-    c.set_position(offset as u64);
-
-    let mut len: usize = 0;
-    for cap in caps.get_ref() {
-        len += cap.to_bytes(&mut c)?;
-    }
-
-    c.set_position(0);
-    c.write_u8(CAPABILITIES_OPT_PARAM)?;
-    c.write_u8(len as u8)?;
-
-    Ok(offset + len)
 }
 
 pub fn open_packet(
@@ -316,7 +291,8 @@ pub fn open_packet(
     // Open.
     let len = MutableBgpOpenPacket::minimum_packet_size();
 
-    let opt_len = open_option_packet(caps, &mut buf[len..])?;
+    //let opt_len = open_option_packet(caps, &mut buf[len..])?;
+    let opt_len = caps.to_bytes(&mut buf[len..])?;
 
     let mut open = MutableBgpOpenPacket::new(buf).unwrap();
     open.set_version(4);

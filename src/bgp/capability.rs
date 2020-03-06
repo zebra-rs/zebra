@@ -26,6 +26,8 @@ const SAFI_KEY_VALUE: u8 = 241;
 pub struct Capabilities(Vec<Capability>);
 
 impl Capabilities {
+    const OPT_PARAM_CODE: u8 = 2;
+
     pub fn new() -> Self {
         Capabilities(Vec::<Capability>::new())
     }
@@ -40,6 +42,27 @@ impl Capabilities {
 
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn to_bytes(&self, buf: &mut [u8]) -> Result<usize, failure::Error> {
+        if self.len() == 0 {
+            return Ok(0);
+        }
+
+        let mut c = Cursor::new(buf);
+        let offset: usize = 2;
+        c.set_position(offset as u64);
+
+        let mut len: usize = 0;
+        for cap in &self.0 {
+            len += cap.to_bytes(&mut c)?;
+        }
+
+        c.set_position(0);
+        c.write_u8(Capabilities::OPT_PARAM_CODE)?;
+        c.write_u8(len as u8)?;
+
+        Ok(offset + len)
     }
 }
 
@@ -186,7 +209,9 @@ impl Capability {
                 }
                 return Ok(Capability::LongLived(v));
             }
-            _ => {}
+            _ => {
+                // Unknown capability.
+            }
         }
         Ok(Capability::RouteRefresh)
     }
