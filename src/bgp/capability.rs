@@ -88,14 +88,14 @@ pub struct RestartFlags {
 
 #[derive(Debug)]
 pub enum Capability {
-    RouteRefresh,
     MultiProtocol(Family),
-    FourOctetAs(u32),
+    RouteRefresh,
     GracefulRestart {
         flags: u8,
         time: u16,
         families: Vec<(Family, u8)>,
     },
+    FourOctetAs(u32),
     DynamicCapability,
     LongLived(Vec<(Family, u8, u32)>),
     AddPath(Vec<(Family, u8)>),
@@ -111,7 +111,6 @@ impl Capability {
     const ADD_PATH: u8 = 69; /* Addpath Capability */
     const LONG_LIVED_GRACEFUL_RESTART: u8 = 129; /* Long Lived Graceful Restart */
     const ROUTE_REFRESH_CISCO: u8 = 128; /* Route Refresh Capability(Cisco) */
-
     const CAPABILITY_CODE_ORF: u8 = 3; /* Cooperative Route Filtering Capability */
     const CAPABILITY_CODE_LABEL_INFO: u8 = 4; /* Carrying Label Information */
     const CAPABILITY_CODE_ENHE: u8 = 5; /* Extended Next Hop Encoding */
@@ -122,7 +121,6 @@ impl Capability {
     pub fn from_bytes(c: &mut Cursor<&[u8]>) -> Result<Capability, failure::Error> {
         let code = c.read_u8()?;
         let len = c.read_u8()?;
-        println!("code {} len {}", code, len);
 
         match code {
             Capability::MULTI_PROTOCOL => {
@@ -231,67 +229,4 @@ impl Capability {
         }
         Ok(0)
     }
-}
-
-// This is left for sample of other methods.
-// capability_parse() caller side:
-//
-// while let Some(payload) = capability_parse(buf, &mut caps) {
-//     buf = payload;
-//     println!("len {}", buf.len());
-// }
-pub fn capability_parse<'a>(packet: &'a [u8], caps: &mut Capabilities) -> Option<&'a [u8]> {
-    if packet.len() < 2 {
-        return None;
-    }
-
-    let code = packet[0];
-    let length = packet[1];
-    let offset: usize = 2 + (length as usize);
-
-    if packet.len() < offset {
-        return None;
-    }
-
-    match code {
-        Capability::ROUTE_REFRESH => {
-            if length != 0 {
-                return None;
-            }
-            caps.push(Capability::RouteRefresh);
-        }
-        Capability::MULTI_PROTOCOL => {
-            if length != 4 {
-                return None;
-            }
-            // AFI and SAFI.
-            let afi: u16 = u16::from_be_bytes([packet[2], packet[3]]);
-            let _res: u8 = packet[4];
-            let safi: u8 = packet[5];
-
-            caps.push(Capability::MultiProtocol(Family { afi, safi }));
-        }
-        Capability::FOUR_OCTET_AS => {
-            if length != 4 {
-                return None;
-            }
-            let asn: u32 = u32::from_be_bytes([packet[2], packet[3], packet[4], packet[5]]);
-            caps.push(Capability::FourOctetAs(asn));
-        }
-        Capability::GRACEFUL_RESTART => {
-            if (length % 6) != 0 {
-                return None;
-            }
-            println!("Capability: Restart");
-        }
-        Capability::LONG_LIVED_GRACEFUL_RESTART => {
-            println!("Capability: LLGR");
-        }
-        Capability::ADD_PATH => {
-            println!("Capability: AddPath");
-        }
-        _ => println!("Capability: Other values"),
-    }
-
-    Some(&packet[offset..])
 }
