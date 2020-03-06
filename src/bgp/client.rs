@@ -1,17 +1,15 @@
+use crate::bgp::packet::MutableBgpHeaderPacket;
+use crate::bgp::packet::MutableBgpOpenPacket;
 use crate::bgp::packet::{BgpHeaderPacket, BgpOpenOptPacket, BgpOpenPacket, BgpTypes};
 use crate::bgp::{Capabilities, Capability, Family, AFI_IP, BGP_HEADER_LEN, SAFI_MPLS_VPN};
-use bytes::BufMut;
 use bytes::BytesMut;
 use pnet::packet::Packet;
 use std::io::{Error, ErrorKind};
 use std::net::{Ipv4Addr, SocketAddr};
-use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
 use tokio_util::codec::{Decoder, Encoder};
 
-pub struct Client {
-    stream: TcpStream,
-}
+pub struct Client {}
 
 #[derive(Debug)]
 pub enum Event {
@@ -107,34 +105,11 @@ impl MessageOpen {
 // struct MessageNotification {}
 
 impl Client {
-    pub fn new(stream: TcpStream, _saddr: SocketAddr) -> Self {
+    pub fn new(_stream: TcpStream, _saddr: SocketAddr) -> Self {
         Client {
-            stream: stream,
+            //stream: stream,
             //saddr: saddr,
         }
-    }
-
-    pub async fn open_send(&mut self) {
-        // Prepare BGP buffer with marker.
-        let mut buf = [0u8; 4096];
-        for i in 0..16 {
-            buf[i] = 0xff;
-        }
-        let mut packet = crate::bgp::packet::MutableBgpHeaderPacket::new(&mut buf[0..19]).unwrap();
-        packet.set_bgp_type(BgpTypes::OPEN);
-        packet.set_length(29u16);
-
-        let mut open = crate::bgp::packet::MutableBgpOpenPacket::new(&mut buf[19..]).unwrap();
-        open.set_version(4);
-        open.set_asn(1);
-        open.set_hold_time(3);
-        let router_id: std::net::Ipv4Addr = "10.0.0.1".parse().unwrap();
-        open.set_router_id(router_id);
-
-        // Open length.
-        let buf = &buf[..29];
-        println!("Write {:?}", buf);
-        //let _ = self.stream.write(buf).await;
     }
 
     pub async fn keepalive_send(&mut self) {
@@ -151,59 +126,6 @@ impl Client {
         let buf = &buf[..19];
         println!("Write {:?}", buf);
         //let _ = self.stream.write(buf).await;
-    }
-
-    pub async fn connect(&mut self) -> Result<(), failure::Error> {
-        // Send BGP packet.
-        self.open_send().await;
-
-        // Read BGP message.
-        loop {
-            let mut buf = [0u8; 4096];
-            let n = self.stream.read(&mut buf).await?;
-            if n == 0 {
-                println!("BGP socket closed");
-                std::process::exit(1);
-            }
-            let buf = &buf[0..n];
-            println!("Read {:?}", buf);
-
-            // Minimum BGP message len is 19.
-            if n < 19 {
-                // Need to read more.
-                println!("BGP packet length is smaller than minimum length (19).");
-                std::process::exit(1);
-            }
-            println!("Read num: {}", n);
-
-            let packet = BgpHeaderPacket::new(&buf).unwrap();
-            let typ = packet.get_bgp_type();
-            let length = packet.get_length();
-
-            println!("Type {:?}", typ);
-            match typ {
-                BgpTypes::OPEN => {
-                    let msg = MessageOpen::from_bytes(packet.payload(), length)?;
-                    println!("MessageOpen {:?}", msg);
-                }
-                BgpTypes::UPDATE => {
-                    println!("Update message!");
-                }
-                BgpTypes::NOTIFICATION => {
-                    println!("Notification message!");
-                    std::process::exit(1);
-                }
-                BgpTypes::KEEPALIVE => {
-                    println!("Keepalive message!");
-                }
-                unknown => {
-                    println!("Unknown message type {:?}", unknown);
-                }
-            }
-            println!("Length {:?}", length);
-
-            self.keepalive_send().await;
-        }
     }
 }
 
@@ -275,9 +197,6 @@ impl Decoder for Bgp {
     }
 }
 
-use crate::bgp::packet::MutableBgpHeaderPacket;
-use crate::bgp::packet::MutableBgpOpenPacket;
-
 pub struct PeerConfig {
     asn: u32,
     hold_time: u16,
@@ -315,6 +234,7 @@ impl Message {
         }
     }
 
+    // Called from encode().
     pub fn to_bytes(self) -> Result<Vec<u8>, failure::Error> {
         let mut buf = [0u8; 4096];
         let mut len: usize = BGP_HEADER_LEN;
@@ -356,22 +276,8 @@ impl Encoder for Bgp {
     type Error = failure::Error;
 
     fn encode(&mut self, msg: Message, dst: &mut BytesMut) -> Result<(), failure::Error> {
-        match msg {
-            Message::RouteRefresh => {
-                let buf = msg.to_bytes().unwrap();
-                println!("XXX RouteRefresh {:?}", buf);
-            }
-            Message::Open(_) => {
-                println!("XXX Open Message encode");
-            }
-            Message::OpenMessage => {
-                println!("Encoder::encode: Open Message Test");
-                let buf = msg.to_bytes()?;
-                dst.reserve(buf.len());
-                dst.put_slice(&buf);
-            }
-        }
-        println!("XXX encode");
+        let buf = msg.to_bytes()?;
+        dst.extend_from_slice(&buf);
         Ok(())
     }
 }
