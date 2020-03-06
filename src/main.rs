@@ -87,9 +87,11 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let mut stream = Framed::new(stream, Bgp {});
 
     // Send open.
-    let msg = Message::RouteRefresh;
+    let msg = Message::OpenMessage;
     if stream.send(msg).await.is_err() {
-        println!("XXX send error");
+        println!("XXX OpenMessage send error");
+    } else {
+        println!("XXX OpenMessage send success");
     }
 
     while let Some(x) = stream.next().await {
@@ -152,8 +154,6 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    zebra::bgp::client::packet();
-
     // Event channel.
     let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
     let listener = TcpListener::bind(("::", BGP_PORT)).await.unwrap();

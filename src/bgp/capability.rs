@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use byteorder::WriteBytesExt;
 use byteorder::{NetworkEndian, ReadBytesExt};
 use std::io::Cursor;
 
@@ -31,6 +32,14 @@ impl Capabilities {
 
     pub fn push(&mut self, value: Capability) {
         self.0.push(value)
+    }
+
+    pub fn get_ref(&self) -> &Vec<Capability> {
+        &self.0
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
     }
 }
 
@@ -180,6 +189,22 @@ impl Capability {
             _ => {}
         }
         Ok(Capability::RouteRefresh)
+    }
+
+    pub fn to_bytes(&self, c: &mut Cursor<&mut [u8]>) -> Result<usize, failure::Error> {
+        let sp = c.position();
+        match self {
+            Capability::MultiProtocol(family) => {
+                c.write_u8(Capability::MULTI_PROTOCOL)?;
+                c.write_u8(4)?;
+                c.write_u16::<NetworkEndian>(family.afi)?;
+                c.write_u8(0)?;
+                c.write_u8(family.safi)?;
+                return Ok((c.position() - sp) as usize);
+            }
+            _ => {}
+        }
+        Ok(0)
     }
 }
 
