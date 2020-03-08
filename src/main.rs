@@ -11,9 +11,9 @@ use tokio::time::{DelayQueue, Duration};
 use tokio_util::codec::Framed;
 use zebra::bgp::*;
 
-struct Peer {
-    _tx: mpsc::UnboundedSender<Event>,
-}
+// struct Peer {
+//     _tx: mpsc::UnboundedSender<Event>,
+// }
 
 type Shared = HashMap<IpAddr, Peer>;
 
@@ -84,7 +84,10 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     };
 
     // Framed.
-    let mut stream = Framed::new(stream, Bgp {});
+    let peer = Peer {
+        state: State::OpenSent,
+    };
+    let mut stream = Framed::new(stream, peer);
 
     // Send open.
     let msg = Message::Open(MessageOpen::new());
@@ -95,11 +98,22 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     }
 
     while let Some(x) = stream.next().await {
-        println!("{:?}", x);
+        match x {
+            Ok(Message::None) => {
+                return;
+            }
+            Ok(Message::Open(_)) => {
+                println!("Got Open message");
+            }
+            _ => {
+                println!("other messages");
+            }
+        }
+        println!("stream await returns");
     }
 }
 
-async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
+async fn accept(mut streams: Listener, _shared: Arc<Mutex<Shared>>) {
     loop {
         let (_stream, _saddr) = match streams.next().await {
             Some(v) => match v {
@@ -110,16 +124,16 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
                 Ok(Event::Connect(saddr)) => {
                     println!("New peer event {}", saddr);
 
-                    let (tx, rx) = mpsc::unbounded_channel::<Event>();
+                    let (_tx, rx) = mpsc::unbounded_channel::<Event>();
 
-                    // Main task.
-                    {
-                        let a = IpAddr::V4("192.168.55.2".parse().unwrap());
-                        let p = Peer { _tx: tx };
-                        let mut peers = shared.lock().unwrap();
-                        peers.insert(a, p);
-                    }
-                    let _shared = Arc::clone(&shared);
+                    // // Main task.
+                    // {
+                    //     let a = IpAddr::V4("192.168.55.2".parse().unwrap());
+                    //     let p = Peer { _tx: tx };
+                    //     let mut peers = shared.lock().unwrap();
+                    //     peers.insert(a, p);
+                    // }
+                    // let _shared = Arc::clone(&shared);
 
                     tokio::spawn(connect(saddr, rx));
                     continue;

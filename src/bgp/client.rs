@@ -23,11 +23,11 @@ pub enum Event {
 pub enum Message {
     Open(MessageOpen),
     KeepAlive,
+    None,
 }
 
 #[derive(Debug)]
 pub struct MessageOpen {
-    len: u16,
     version: u8,
     asn: u16,
     hold_time: u16,
@@ -45,7 +45,7 @@ impl MessageOpen {
         caps.push(cap_afi);
 
         MessageOpen {
-            len: 0,
+            //len: 0,
             version: 4,
             asn: 1,
             hold_time: 90,
@@ -54,28 +54,33 @@ impl MessageOpen {
         }
     }
 
-    pub fn len(&self) -> usize {
-        self.len as usize
-    }
-
-    pub fn from_bytes(buf: &[u8], len: u16) -> Result<Self, failure::Error> {
+    pub fn from_bytes(buf: &[u8]) -> Result<Self, failure::Error> {
         let open = BgpOpenPacket::new(buf).ok_or(Error::from(ErrorKind::UnexpectedEof))?;
         let opt_len = open.get_opt_param_len() as usize;
-        if opt_len < open.payload().len() {
+        println!("opt_len {}", opt_len);
+        println!("opt_payloadlen {}", open.payload().len());
+
+        if opt_len > open.payload().len() {
             return Err(Error::from(ErrorKind::UnexpectedEof).into());
         }
 
+        println!("before cap parse");
+
         let mut caps = Capabilities::new();
         if opt_len > 0 {
+            println!("opt_len {}", opt_len);
+
             let opt = BgpOpenOptPacket::new(open.payload())
                 .ok_or(Error::from(ErrorKind::UnexpectedEof))?;
 
             // When Open opt message is not capability(2) return here.
             if opt.get_typ() != 2 {
+                println!("Opt type is not 2");
                 return Err(Error::from(ErrorKind::UnexpectedEof).into());
             }
             let mut len = opt.get_length() as usize;
-            if len < opt.payload().len() {
+            if len > opt.payload().len() {
+                println!("len is smaller than payload");
                 return Err(Error::from(ErrorKind::UnexpectedEof).into());
             }
 
@@ -100,7 +105,7 @@ impl MessageOpen {
         }
 
         Ok(MessageOpen {
-            len: len,
+            //len: len,
             version: open.get_version(),
             asn: open.get_asn(),
             hold_time: open.get_hold_time(),
@@ -124,25 +129,32 @@ impl MessageOpen {
     }
 }
 
-pub struct Bgp {}
+pub enum State {
+    Idle,
+    Connect,
+    Active,
+    OpenSent,
+    OpenConfirm,
+    Established,
+}
+
+pub struct Peer {
+    pub state: State,
+}
 
 impl Message {
-    // Used by decode.
-    pub fn len(&self) -> usize {
-        match self {
-            Message::Open(m) => m.len(),
-            Message::KeepAlive => 0,
-        }
-    }
-
-    // Called from encode().
     pub fn to_bytes(self) -> Result<Vec<u8>, failure::Error> {
         let mut buf = [0u8; 4096];
         let mut len: usize = BGP_HEADER_LEN;
+        let mut typ = BgpTypes::OPEN;
 
         match self {
             Message::Open(m) => {
+                typ = BgpTypes::OPEN;
                 len += m.to_bytes(&mut buf[len..])?;
+            }
+            Message::KeepAlive => {
+                typ = BgpTypes::KEEPALIVE;
             }
             _ => {}
         }
@@ -152,14 +164,14 @@ impl Message {
             buf[i] = 0xff;
         }
         let mut header = MutableBgpHeaderPacket::new(&mut buf[..len]).unwrap();
-        header.set_bgp_type(BgpTypes::OPEN);
+        header.set_bgp_type(typ);
         header.set_length(len as u16);
 
         Ok((&buf[..len]).to_vec())
     }
 }
 
-impl Encoder for Bgp {
+impl Encoder for Peer {
     type Item = Message;
     type Error = failure::Error;
 
@@ -170,14 +182,15 @@ impl Encoder for Bgp {
     }
 }
 
-pub fn from_bytes(buf: &[u8]) -> Result<Message, failure::Error> {
+pub fn from_bytes(buf: &mut BytesMut) -> Result<Message, failure::Error> {
     println!("--------------------");
     println!("RECV: Buffer length {}", buf.len());
     let n = buf.len();
 
     if n == 0 {
         println!("XXX read length is zero");
-        std::process::exit(1);
+        //std::process::exit(1);
+        return Ok(Message::None);
     }
 
     if n < 19 {
@@ -192,40 +205,54 @@ pub fn from_bytes(buf: &[u8]) -> Result<Message, failure::Error> {
     println!("RECV: Header Type {:?}", typ);
     println!("RECV: Header length {:?}", len);
 
-    match typ {
+    let msg = match typ {
         BgpTypes::OPEN => {
-            let msg = MessageOpen::from_bytes(packet.payload(), len)?;
-            println!("MessageOpen {:?}", msg);
-            return Ok(Message::Open(msg));
+            let msg = MessageOpen::from_bytes(packet.payload())?;
+            Message::Open(msg)
         }
         BgpTypes::UPDATE => {
             println!("Update message!");
+            Message::KeepAlive
         }
         BgpTypes::NOTIFICATION => {
             println!("Notification message!");
+            Message::KeepAlive
         }
         BgpTypes::KEEPALIVE => {
             println!("Keepalive message!");
+            Message::KeepAlive
         }
         unknown => {
             println!("Unknown message type {:?}", unknown);
+            Message::KeepAlive
         }
-    }
-    println!("Length {:?}", len);
-    Err(std::io::Error::from(std::io::ErrorKind::BrokenPipe).into())
+    };
+    println!("{:?}", msg);
+    println!("Packet Forward Length {:?}", len);
+
+    let _ = buf.split_to(len as usize);
+
+    Ok(msg)
 }
 
-impl Decoder for Bgp {
+impl Decoder for Peer {
     type Item = Message;
     type Error = std::io::Error;
 
-    fn decode(&mut self, src: &mut BytesMut) -> std::io::Result<Option<Message>> {
+    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Message>, Error> {
         match from_bytes(src) {
-            Ok(m) => {
-                println!("Packet length {}", m.len());
-                let _ = src.split_to(m.len());
-                Ok(Some(m))
+            Ok(Message::None) => Ok(Some(Message::None)),
+            Ok(Message::Open(m)) => {
+                match self.state {
+                    State::OpenSent => {
+                        println!("OpenSent -> OpenConfirm");
+                        self.state = State::OpenConfirm;
+                    }
+                    _ => {}
+                }
+                Ok(Some(Message::Open(m)))
             }
+            Ok(m) => Ok(Some(m)),
             Err(_) => Ok(None),
         }
     }
