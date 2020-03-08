@@ -87,11 +87,11 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     let mut stream = Framed::new(stream, Bgp {});
 
     // Send open.
-    let msg = Message::OpenMessage;
+    let msg = Message::Open(MessageOpen::new());
     if stream.send(msg).await.is_err() {
-        println!("XXX OpenMessage send error");
+        println!("OpenMessage send error");
     } else {
-        println!("XXX OpenMessage send success");
+        println!("OpenMessage send success");
     }
 
     while let Some(x) = stream.next().await {

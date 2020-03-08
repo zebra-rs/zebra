@@ -6,6 +6,7 @@ pub use client::Bgp;
 pub use client::Client;
 pub use client::Event;
 pub use client::Message;
+pub use client::MessageOpen;
 pub use communities::Communities;
 pub use message::MessageHeader;
 pub use neighbor::Neighbor;
