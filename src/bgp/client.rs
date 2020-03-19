@@ -240,8 +240,18 @@ impl Decoder for Peer {
     type Error = std::io::Error;
 
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Message>, Error> {
+        if src.is_empty() {
+            println!("XXXX Empty");
+            return Ok(None);
+        }
+
+        println!("YYY: decode is called");
         match from_bytes(src) {
-            Ok(Message::None) => Ok(Some(Message::None)),
+            Ok(Message::None) => {
+                println!("XXX Message::None");
+                Ok(Some(Message::None))
+            }
+
             Ok(Message::Open(m)) => {
                 match self.state {
                     State::OpenSent => {
@@ -252,8 +262,14 @@ impl Decoder for Peer {
                 }
                 Ok(Some(Message::Open(m)))
             }
-            Ok(m) => Ok(Some(m)),
-            Err(_) => Ok(None),
+            Ok(m) => {
+                println!("XXX Other messages:");
+                Ok(Some(m))
+            }
+            Err(_) => {
+                println!("XXXXXXXXXXX");
+                Err(std::io::Error::from(std::io::ErrorKind::BrokenPipe))
+            }
         }
     }
 }
