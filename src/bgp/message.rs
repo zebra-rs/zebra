@@ -3,7 +3,7 @@ use std::io::Write;
 pub struct MessageHeader {}
 
 impl MessageHeader {
-    pub fn to_bytes(self) -> Result<Vec<u8>, failure::Error> {
+    pub fn to_bytes(self) -> Result<Vec<u8>, anyhow::Error> {
         println!("XXX to_bytes");
         let buf: Vec<u8> = Vec::new();
         let mut c = std::io::Cursor::new(buf);

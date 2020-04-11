@@ -1,23 +1,23 @@
-#[derive(failure::Fail, Debug)]
-#[fail(display = "Fail error occurred.")]
+#[derive(thiserror::Error, Debug)]
+#[error("Fail error occurred.")]
 pub struct MyError {}
 
-#[derive(failure::Fail, Debug)]
+#[derive(thiserror::Error, Debug)]
 pub enum MyBgpError {
-    #[fail(display = "This is BGP error")]
+    #[error("This is BGP error")]
     BgpError,
 }
 
-pub fn error_io_test() -> Result<(), failure::Error> {
+pub fn error_io_test() -> Result<(), anyhow::Error> {
     let _buf = std::fs::File::open("hoge")?;
     Ok(())
 }
 
-pub fn error_my_test() -> Result<(), failure::Error> {
+pub fn error_my_test() -> Result<(), anyhow::Error> {
     Err(MyError {}.into())
 }
 
-pub fn error_my_bgp_test() -> Result<(), failure::Error> {
+pub fn error_my_bgp_test() -> Result<(), anyhow::Error> {
     Err(MyBgpError::BgpError.into())
 }
 

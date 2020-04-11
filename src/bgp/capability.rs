@@ -44,7 +44,7 @@ impl Capabilities {
         self.0.len()
     }
 
-    pub fn to_bytes(&self, buf: &mut [u8]) -> Result<usize, failure::Error> {
+    pub fn to_bytes(&self, buf: &mut [u8]) -> Result<usize, anyhow::Error> {
         if self.len() == 0 {
             return Ok(0);
         }
@@ -66,9 +66,9 @@ impl Capabilities {
     }
 }
 
-#[derive(failure::Fail, Debug)]
+#[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[fail(display = "malformed packet")]
+    #[error("malformed packet")]
     Malformed,
 }
 
@@ -118,7 +118,7 @@ impl Capability {
     const CAPABILITY_CODE_FQDN: u8 = 73; /* Advertise hostname capability */
     const CAPABILITY_CODE_ORF_OLD: u8 = 130; /* Cooperative Route Filtering Capability(Cisco) */
 
-    pub fn from_bytes(c: &mut Cursor<&[u8]>) -> Result<Capability, failure::Error> {
+    pub fn from_bytes(c: &mut Cursor<&[u8]>) -> Result<Capability, anyhow::Error> {
         let code = c.read_u8()?;
         let len = c.read_u8()?;
 
@@ -214,7 +214,7 @@ impl Capability {
         Ok(Capability::RouteRefresh)
     }
 
-    pub fn to_bytes(&self, c: &mut Cursor<&mut [u8]>) -> Result<usize, failure::Error> {
+    pub fn to_bytes(&self, c: &mut Cursor<&mut [u8]>) -> Result<usize, anyhow::Error> {
         let sp = c.position();
         match self {
             Capability::MultiProtocol(family) => {

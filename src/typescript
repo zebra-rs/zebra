@@ -1,0 +1,695 @@
+Script started on 2020-04-12 02:40:15+0900
+$ ~/rust/zebra/src[32m master*[00m cargo test
+[0m[0m[1m[32m   Compiling[0m zebra v0.0.0 (/home/kunihiro/rust/zebra)
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 101/106[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:159:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m159[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_parens)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:166:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:173:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m173[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:180:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:187:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m187[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:194:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m194[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:159:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m159[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_parens)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:166:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m166[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:173:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m173[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:201:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m201[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:208:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m208[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:215:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m215[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:180:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:222:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m222[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:187:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m187[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:194:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m194[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:229:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:236:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m236[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:243:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m243[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:201:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m201[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:250:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:208:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m208[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:257:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m257[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:215:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m215[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:264:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m264[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:222:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m222[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:295:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:229:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m229[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:363:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m363[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:236:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m236[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:370:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m370[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:243:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m243[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:250:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m250[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:257:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m257[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:264:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m264[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:295:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m295[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:363:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m363[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:370:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m370[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:377:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:384:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m384[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:391:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m391[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:398:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m398[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:405:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m405[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:412:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m412[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:419:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m419[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:426:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m426[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:433:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m433[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:440:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m440[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:377:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m377[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:384:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m384[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:391:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m391[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:447:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m447[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:398:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m398[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:405:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m405[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:412:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m412[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:419:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m419[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:454:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m454[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:426:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m426[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:433:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m433[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:440:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m440[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:447:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m447[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:454:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m454[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:461:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m461[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:468:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m468[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:461:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m461[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:499:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m499[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:65:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:74:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:140:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m140[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:149:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:468:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m468[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:65:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:74:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:138:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m138[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:147:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp.rs:499:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m499[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:79:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:115:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:65:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:122:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:74:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:129:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:140:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m140[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:136:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_notification.rs:149:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m149[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:148:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:65:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m65[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:211:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m211[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:74:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m74[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:247:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m247[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:254:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m254[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:138:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m138[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open_opt.rs:147:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m147[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:261:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m261[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:268:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m268[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:79:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m79[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:280:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m280[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:115:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m115[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:122:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m122[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:129:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m129[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:136:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m136[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:148:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:211:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m211[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:247:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m247[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:254:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m254[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:261:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m261[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:268:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m268[0m[0m [0m[0m[1m[38;5;12m| [0m[0m            (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[K[0m[1m[33mwarning[0m[0m[1m: unnecessary parentheses around block return value[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0m/home/kunihiro/rust/zebra/target/debug/build/zebra-83c2e62c787268b4/out/bgp_open.rs:280:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m280[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        (_self.packet[co] as u8)[0m
+[0m    [0m[0m[1m[38;5;12m| [0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: remove these parentheses[0m
+
+[0m[0m[1m[36m    Building[0m [===================================================>   ] 102/106[0m[0m[1m[36m    Building[0m [====================================================>  ] 104/106[K[0m[1m[33mwarning[0m[0m[1m: field is never read: `tx`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main.rs:15:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    tx: mpsc::UnboundedSender<Event>,[0m
+[0m   [0m[0m[1m[38;5;12m| [0m[0m    [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[0m[1m[36m    Building[0m [====================================================>  ] 104/106[0m[0m[1m[36m    Building[0m [=====================================================> ] 105/106[K[0m[0m[1m[32m    Finished[0m test [unoptimized + debuginfo] target(s) in 1.35s
+[0m[0m[1m[32m     Running[0m /home/kunihiro/rust/zebra/target/debug/deps/zebra-4d372d59bd2bd832
+
+running 10 tests
+test bgp::communities::test::to_string ... [32mok(B[m
+test bgp::communities::test::to_json ... [32mok(B[m
+test bgp::neighbor::test::sort_add ... [32mok(B[m
+test bgp::neighbor_map::test::insert ... [32mok(B[m
+test bgp::neighbor_map::test::insert2 ... [32mok(B[m
+test error::test::downcast_io ... [32mok(B[m
+test bgp::communities::test::push ... [32mok(B[m
+test error::test::downcast_my_bgp ... [32mok(B[m
+test bgp::communities::test::from_str ... [32mok(B[m
+test error::test::downcast_my ... [32mok(B[m
+
+test result: [32mok(B[m. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+[0m[0m[1m[32m     Running[0m /home/kunihiro/rust/zebra/target/debug/deps/zebra-a0d652a354bf86f0
+
+running 0 tests
+
+test result: [32mok(B[m. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+[0m[0m[1m[32m   Doc-tests[0m zebra
+
+running 0 tests
+
+test result: [32mok(B[m. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+$ ~/rust/zebra/src[32m master*[00m exit
+
+Script done on 2020-04-12 02:40:19+0900

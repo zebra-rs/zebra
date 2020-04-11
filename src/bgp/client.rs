@@ -54,7 +54,7 @@ impl MessageOpen {
         }
     }
 
-    pub fn from_bytes(buf: &[u8]) -> Result<Self, failure::Error> {
+    pub fn from_bytes(buf: &[u8]) -> Result<Self, anyhow::Error> {
         let open = BgpOpenPacket::new(buf).ok_or(Error::from(ErrorKind::UnexpectedEof))?;
         let opt_len = open.get_opt_param_len() as usize;
         println!("opt_len {}", opt_len);
@@ -114,7 +114,7 @@ impl MessageOpen {
         })
     }
 
-    pub fn to_bytes(&self, buf: &mut [u8]) -> Result<usize, failure::Error> {
+    pub fn to_bytes(&self, buf: &mut [u8]) -> Result<usize, anyhow::Error> {
         let offset = MutableBgpOpenPacket::minimum_packet_size();
         let len = self.caps.to_bytes(&mut buf[offset..])?;
 
@@ -143,7 +143,7 @@ pub struct Peer {
 }
 
 impl Message {
-    pub fn to_bytes(self) -> Result<Vec<u8>, failure::Error> {
+    pub fn to_bytes(self) -> Result<Vec<u8>, anyhow::Error> {
         let mut buf = [0u8; 4096];
         let mut len: usize = BGP_HEADER_LEN;
         let mut typ = BgpTypes::OPEN;
@@ -173,16 +173,16 @@ impl Message {
 
 impl Encoder for Peer {
     type Item = Message;
-    type Error = failure::Error;
+    type Error = anyhow::Error;
 
-    fn encode(&mut self, msg: Message, dst: &mut BytesMut) -> Result<(), failure::Error> {
+    fn encode(&mut self, msg: Message, dst: &mut BytesMut) -> Result<(), anyhow::Error> {
         let buf = msg.to_bytes()?;
         dst.extend_from_slice(&buf);
         Ok(())
     }
 }
 
-pub fn from_bytes(buf: &mut BytesMut) -> Result<Message, failure::Error> {
+pub fn from_bytes(buf: &mut BytesMut) -> Result<Message, anyhow::Error> {
     println!("--------------------");
     println!("RECV: Buffer length {}", buf.len());
     let n = buf.len();
