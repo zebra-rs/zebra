@@ -121,12 +121,16 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
                     }
                 }
             }
+            Ok(Message::KeepAlive) => {
+                println!("Got KeepAlive message");
+            }
             y => {
                 println!("XXXX other messages {:?}", y);
             }
         }
         println!("stream await returns");
     }
+    println!("XXX while stream.next() end");
 }
 
 async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
