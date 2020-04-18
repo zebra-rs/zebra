@@ -15,6 +15,9 @@ pnet_macros = "0.25.0"
 
 [dependencies]
 lazy_static = "1.4.0"
+log = "0.4.8"
+slog = "2.5.2"
+slog-term = "2.5.0"
 pnet = "0.25.0"
 pnet_macros_support = "0.25.0"
 futures = "0.3.4"

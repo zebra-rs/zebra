@@ -11,6 +11,10 @@ use tokio::time::{DelayQueue, Duration};
 use tokio_util::codec::Framed;
 use zebra::bgp::*;
 
+use log::info;
+use slog::{o, slog_info, Drain, Logger};
+use slog_term;
+
 struct PeerConfig {
     tx: mpsc::UnboundedSender<Event>,
 }
@@ -59,6 +63,7 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
             },
         };
 
+        let mut timer = DelayQueue::new();
         timer.insert(Event::TimerExpired, Duration::from_secs(60));
         tokio::select! {
             v = timer.next() => {
@@ -98,6 +103,9 @@ async fn connect(saddr: SocketAddr, mut rx: mpsc::UnboundedReceiver<Event>) {
     }
 
     let mut state = State::OpenSent;
+
+    let mut timer = DelayQueue::new();
+    timer.insert(Event::TimerExpired, Duration::from_secs(60));
 
     while let Some(x) = stream.next().await {
         match x {
@@ -188,6 +196,11 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let plain = slog_term::PlainSyncDecorator::new(std::io::stdout());
+    let logger = Logger::root(slog_term::FullFormat::new(plain).build().fuse(), o!());
+
+    slog_info!(logger, "zebra bgpd started");
+
     // Event channel.
     let (tx, rx) = mpsc::unbounded_channel::<IpAddr>();
     let listener = TcpListener::bind(("::", BGP_PORT)).await.unwrap();
