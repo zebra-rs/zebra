@@ -1,0 +1,35 @@
+diff --git a/src/bgp/client.rs b/src/bgp/client.rs
+index dceea9d..53500af 100644
+--- a/src/bgp/client.rs
++++ b/src/bgp/client.rs
+@@ -110,7 +110,7 @@ impl MessageOpen {
+             asn: open.get_asn(),
+             hold_time: open.get_hold_time(),
+             router_id: open.get_router_id(),
+-            caps: caps,
++            caps,
+         })
+     }
+ 
+diff --git a/src/main.rs b/src/main.rs
+index dc2a107..25c63de 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -12,7 +12,7 @@ use tokio_util::codec::Framed;
+ use zebra::bgp::*;
+ 
+ struct PeerConfig {
+-    tx: mpsc::UnboundedSender<Event>,
++    _tx: mpsc::UnboundedSender<Event>,
+ }
+ 
+ type Shared = HashMap<IpAddr, PeerConfig>;
+@@ -149,7 +149,7 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
+                     // // Main task.
+                     {
+                         let a = IpAddr::V4("192.168.55.2".parse().unwrap());
+-                        let p = PeerConfig { tx };
++                        let p = PeerConfig { _tx: tx };
+                         let mut peers = shared.lock().unwrap();
+                         peers.insert(a, p);
+                     }

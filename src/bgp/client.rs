@@ -110,7 +110,7 @@ impl MessageOpen {
             asn: open.get_asn(),
             hold_time: open.get_hold_time(),
             router_id: open.get_router_id(),
-            caps: caps,
+            caps,
         })
     }
 

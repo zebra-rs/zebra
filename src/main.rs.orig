@@ -16,7 +16,7 @@ use slog::{o, slog_info, Drain, Logger};
 use slog_term;
 
 struct PeerConfig {
-    _tx: mpsc::UnboundedSender<Event>,
+    tx: mpsc::UnboundedSender<Event>,
 }
 
 type Shared = HashMap<IpAddr, PeerConfig>;
@@ -157,7 +157,7 @@ async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
                     // // Main task.
                     {
                         let a = IpAddr::V4("192.168.55.2".parse().unwrap());
-                        let p = PeerConfig { _tx: tx };
+                        let p = PeerConfig { tx };
                         let mut peers = shared.lock().unwrap();
                         peers.insert(a, p);
                     }
