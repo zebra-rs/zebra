@@ -11,15 +11,15 @@ build = "build.rs"
 [build-dependencies]
 glob = "0.3.0"
 syntex = "0.42"
-pnet_macros = "0.25.0"
+pnet_macros = "0.26.0"
 
 [dependencies]
 lazy_static = "1.4.0"
 log = "0.4.8"
 slog = "2.5.2"
 slog-term = "2.5.0"
-pnet = "0.25.0"
-pnet_macros_support = "0.25.0"
+pnet = "0.26.0"
+pnet_macros_support = "0.26.0"
 futures = "0.3.4"
 tokio = { version = "0.2.13", features = ["full"] }
 tokio-util = { version = "0.2.0", features = ["full"] }

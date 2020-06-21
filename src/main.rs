@@ -11,7 +11,7 @@ use tokio::time::{DelayQueue, Duration};
 use tokio_util::codec::Framed;
 use zebra::bgp::*;
 
-use log::info;
+// use log::info;
 use slog::{o, slog_info, Drain, Logger};
 use slog_term;
 
