@@ -171,8 +171,8 @@ impl Message {
     }
 }
 
-impl Encoder for Peer {
-    type Item = Message;
+impl Encoder<Message> for Peer {
+    //type Item = Message;
     type Error = anyhow::Error;
 
     fn encode(&mut self, msg: Message, dst: &mut BytesMut) -> Result<(), anyhow::Error> {

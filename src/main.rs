@@ -5,9 +5,9 @@ use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 use tokio::net::TcpListener;
-use tokio::stream::{Stream, StreamExt};
 use tokio::sync::mpsc;
 use tokio::time::{DelayQueue, Duration};
+use tokio_stream::{Stream, StreamExt};
 use tokio_util::codec::Framed;
 use zebra::bgp::*;
 
