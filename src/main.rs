@@ -1,4 +1,5 @@
 #![allow(unused_imports)]
+#![allow(dead_code)]
 use futures::sink::SinkExt;
 use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
@@ -11,6 +12,7 @@ use tokio::sync::mpsc;
 use tokio::time::Duration;
 use tokio_stream::{Stream, StreamExt};
 use tokio_util::codec::Framed;
+use tokio_util::time::DelayQueue;
 use zebra::bgp::*;
 
 // use log::info;
@@ -50,98 +52,98 @@ struct Listener {
 //     }
 // }
 
-async fn connect(saddr: SocketAddr, rx: mpsc::UnboundedReceiver<Event>) {
-    let stream = loop {
-        // let mut timer = DelayQueue::new();
-        // timer.insert(Event::TimerExpired, Duration::from_secs(3));
+// async fn connect(saddr: SocketAddr, rx: mpsc::UnboundedReceiver<Event>) {
+//     let stream = loop {
+//         // let mut timer = DelayQueue::new();
+//         // timer.insert(Event::TimerExpired, Duration::from_secs(3));
 
-        // tokio::select! {
-        // _ = timer.next() => {
-        //     println!("Start timer expired");
-        // },
-        // _ = rx.next() => {
-        //     println!("Stop");
-        //     return;
-        // },
-        // };
+//         // tokio::select! {
+//         // _ = timer.next() => {
+//         //     println!("Start timer expired");
+//         // },
+//         // _ = rx.next() => {
+//         //     println!("Stop");
+//         //     return;
+//         // },
+//         // };
 
-        // let mut timer = DelayQueue::new();
-        // timer.insert(Event::TimerExpired, Duration::from_secs(60));
-        tokio::select! {
-            // v = timer.next() => {
-            //     println!("Connect timer expired {:?}", v);
-            //     continue;
-            // },
-            // _ = rx.next() => {
-            //     println!("Stop");
-            //     return;
-            // },
-            v = tokio::net::TcpStream::connect(saddr) => {
-                match v {
-                    Ok(v) => {
-                        break v;
-                    }
-                    Err(e) => {
-                        println!("Connect Error {:?}", e);
-                        continue;
-                    }
-                }
-            }
-        }
-    };
+//         // let mut timer = DelayQueue::new();
+//         // timer.insert(Event::TimerExpired, Duration::from_secs(60));
+//         tokio::select! {
+//             // v = timer.next() => {
+//             //     println!("Connect timer expired {:?}", v);
+//             //     continue;
+//             // },
+//             // _ = rx.next() => {
+//             //     println!("Stop");
+//             //     return;
+//             // },
+//             v = tokio::net::TcpStream::connect(saddr) => {
+//                 match v {
+//                     Ok(v) => {
+//                         break v;
+//                     }
+//                     Err(e) => {
+//                         println!("Connect Error {:?}", e);
+//                         continue;
+//                     }
+//                 }
+//             }
+//         }
+//     };
 
-    // Framed.
-    let peer = Peer {
-        state: State::OpenSent,
-    };
-    let mut stream = Framed::new(stream, peer);
+//     // Framed.
+//     let peer = Peer {
+//         state: State::OpenSent,
+//     };
+//     let mut stream = Framed::new(stream, peer);
 
-    // Send open.
-    let msg = Message::Open(MessageOpen::new());
-    if stream.send(msg).await.is_err() {
-        println!("OpenMessage send error");
-    } else {
-        println!("OpenMessage send success");
-    }
+//     // Send open.
+//     let msg = Message::Open(MessageOpen::new());
+//     if stream.send(msg).await.is_err() {
+//         println!("OpenMessage send error");
+//     } else {
+//         println!("OpenMessage send success");
+//     }
 
-    let mut state = State::OpenSent;
+//     let mut state = State::OpenSent;
 
-    // let mut timer = DelayQueue::new();
-    // timer.insert(Event::TimerExpired, Duration::from_secs(60));
+//     // let mut timer = DelayQueue::new();
+//     // timer.insert(Event::TimerExpired, Duration::from_secs(60));
 
-    while let Some(x) = stream.next().await {
-        match x {
-            Ok(Message::None) => {
-                break;
-            }
-            Ok(Message::Open(_)) => {
-                println!("Got Open message");
-                match state {
-                    State::OpenSent => {
-                        println!("OpenSent");
-                        if stream.send(Message::KeepAlive).await.is_err() {
-                            println!("Keepalive send error");
-                        } else {
-                            println!("Keepalive send success");
-                        }
-                        state = State::OpenSent;
-                    }
-                    _ => {
-                        println!("OpenSent");
-                    }
-                }
-            }
-            Ok(Message::KeepAlive) => {
-                println!("Got KeepAlive message");
-            }
-            y => {
-                println!("XXXX other messages {:?}", y);
-            }
-        }
-        println!("stream await returns");
-    }
-    println!("XXX while stream.next() end");
-}
+//     while let Some(x) = stream.next().await {
+//         match x {
+//             Ok(Message::None) => {
+//                 break;
+//             }
+//             Ok(Message::Open(_)) => {
+//                 println!("Got Open message");
+//                 match state {
+//                     State::OpenSent => {
+//                         println!("OpenSent");
+//                         if stream.send(Message::KeepAlive).await.is_err() {
+//                             println!("Keepalive send error");
+//                         } else {
+//                             println!("Keepalive send success");
+//                         }
+//                         state = State::OpenSent;
+//                     }
+//                     _ => {
+//                         println!("OpenSent");
+//                     }
+//                 }
+//             }
+//             Ok(Message::KeepAlive) => {
+//                 println!("Got KeepAlive message");
+//             }
+//             y => {
+//                 println!("XXXX other messages {:?}", y);
+//             }
+//         }
+//         println!("stream await returns");
+//     }
+//     println!("XXX while stream.next() end");
+// }
 
 // async fn accept(mut streams: Listener, shared: Arc<Mutex<Shared>>) {
 //     loop {
@@ -197,7 +199,7 @@ async fn connect(saddr: SocketAddr, rx: mpsc::UnboundedReceiver<Event>) {
 // }
 
 #[tokio::main]
-pub async fn main() -> Result<()> {
+async fn main() -> Result<(), Error> {
     // let plain = slog_term::PlainSyncDecorator::new(std::io::stdout());
     // let logger = Logger::root(slog_term::FullFormat::new(plain).build().fuse(), o!());
 
@@ -224,5 +226,16 @@ pub async fn main() -> Result<()> {
 
     // futures::join!(accept(streams, shared));
 
-    // Ok(())
+    let mut timer = DelayQueue::new();
+    let key = timer.insert(1, Duration::from_secs(1));
+    timer.remove(&key);
+    timer.insert(1, Duration::from_secs(10));
+
+    tokio::select! {
+        v = timer.next() => {
+            println!("expired {:?}", v);
+        }
+    }
+
+    Ok(())
 }
